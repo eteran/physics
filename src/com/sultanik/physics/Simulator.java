@@ -1,6 +1,10 @@
 package com.sultanik.physics;
 
+import com.sultanik.physics.ui.*;
+
 import java.util.*;
+import java.awt.*;
+import javax.swing.*;
 
 public class Simulator {
     /**
@@ -12,6 +16,7 @@ public class Simulator {
      */
     public static final String REV_DATE = "2009-08-10";
 
+    LinkedHashSet<SimulationListener> listeners;
     HashSet<Body> bodies;
     HashSet<Force> forces;
     double timeStep;
@@ -21,10 +26,19 @@ public class Simulator {
     private static final double	CONSTRAINT_SATISFICATION_THRESHOLD	= 0.001;
 
     public Simulator(double timeStep) {
+        listeners = new LinkedHashSet<SimulationListener>();
         bodies = new HashSet<Body>();
         forces = new HashSet<Force>();
         timeStep = 0.01;
         t = 0.0;
+    }
+
+    public void addListener(SimulationListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(SimulationListener listener) {
+        listeners.remove(listener);
     }
 
     public void setTimeStep(double timeStep) {
@@ -95,6 +109,9 @@ public class Simulator {
         return constraints;        
     }
 
+    public HashSet<Body> getBodies() { return bodies; }
+    public HashSet<Force> getForces() { return forces; }
+
     public void simulate() {
         t += timeStep;
         HashSet<Particle> particles = getParticles();
@@ -103,6 +120,9 @@ public class Simulator {
         accumulateForces(particles, constraints);
         vertlet(particles);
         satisfyConstraints(particles, constraints);
+
+        for(SimulationListener sl : listeners)
+            sl.handleIteration(t);
     }
 
     public void simulate(double untilTime) {
@@ -113,15 +133,27 @@ public class Simulator {
     public static void main(String[] args) {
         double resolution = 0.01;
         Simulator sim = new Simulator(resolution);
+        JFrame frame = new JFrame("Physics");
+        SimulationPanel sp = new SimulationPanel(sim);
+        sp.setPreferredSize(new Dimension(640,480));
+        frame.add(sp);
+        frame.pack();
+        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
         double startTime = System.currentTimeMillis();
         double runTime = 10.0; /* seconds */
+        double lastTime = startTime;
         while(System.currentTimeMillis() < startTime + runTime * 1000.0) {
-            //sim.simulate((System.currentTimeMillis() - startTime) / 1000.0);
+            lastTime = System.currentTimeMillis();
             sim.simulate();
-            try {
-                Thread.sleep((int)(resolution * 1000.0 + 0.5));
-            } catch(Exception e) {
-                e.printStackTrace();
+            int sleepTime = (int)(resolution * 1000.0 - (System.currentTimeMillis() - lastTime) + 0.5);
+            //System.out.println("" + sleepTime);
+            if(sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

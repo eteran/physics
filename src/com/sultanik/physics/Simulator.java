@@ -1,5 +1,7 @@
 package com.sultanik.physics;
 
+import java.util.*;
+
 public class Simulator {
     /**
      * The version of Physics.
@@ -33,7 +35,7 @@ public class Simulator {
         return timeStep;
     }
 
-    void accumulateForces(HashSet<Particle> particles, HashSet<Constraints> constraints) {
+    void accumulateForces(HashSet<Particle> particles, HashSet<Constraint> constraints) {
         /* first, clear all of the previous forces */
         for(Particle p : particles) {
             p.setAccelX(0.0);
@@ -60,9 +62,9 @@ public class Simulator {
         }
     }
 
-    void satisfyConstraints(HashSet<Particle> particles, HashSet<Constraints> constraints) {
+    void satisfyConstraints(HashSet<Particle> particles, HashSet<Constraint> constraints) {
         double maxDiff = CONSTRAINT_SATISFICATION_THRESHOLD;
-        for(int i=0; i <= CONSTRAINT_SATISFICATION_ITERATIONS && max_diff >= CONSTRAINT_SATISFICATION_THRESHOLD; i++) {
+        for(int i=0; i <= CONSTRAINT_SATISFICATION_ITERATIONS && maxDiff >= CONSTRAINT_SATISFICATION_THRESHOLD; i++) {
             maxDiff = 0.0;
             
             /* first, make sure that none of the particles are below ground! */
@@ -79,17 +81,25 @@ public class Simulator {
         }
     }
 
+    public HashSet<Particle> getParticles() {
+        HashSet<Particle> particles = new HashSet<Particle>();
+        for(Body body : bodies)
+            particles.addAll(body.getParticles());
+        return particles;
+    }
+
+    public HashSet<Constraint> getConstraints() {
+        HashSet<Constraint> constraints = new HashSet<Constraint>();
+        for(Body body : bodies)
+            constraints.addAll(body.getConstraints());
+        return constraints;        
+    }
+
     public void simulate() {
         t += timeStep;
-        HashSet<Particle> particles = new HashSet<Particle>();
-        HashSet<Constraint> constraints = new HashSet<Constraint>();
-        /* collect all of the particles and constraints for this step */
-        for(Body body : bodies) {
-            for(Particle p : body.getParticles())
-                particles.add(p);
-            for(Constraint c : body.getConstraints())
-                constraints.add(c);
-        }
+        HashSet<Particle> particles = getParticles();
+        HashSet<Constraint> constraints = getConstraints();
+
         accumulateForces(particles, constraints);
         vertlet(particles);
         satisfyConstraints(particles, constraints);
@@ -101,9 +111,18 @@ public class Simulator {
     }
 
     public static void main(String[] args) {
+        double resolution = 0.01;
+        Simulator sim = new Simulator(resolution);
         double startTime = System.currentTimeMillis();
         double runTime = 10.0; /* seconds */
-        while(System.currentTimeMillis() < startTime + runTime * 1000.0)
-            simulate((System.currentTimeMillis() - startTime) / 1000.0);
+        while(System.currentTimeMillis() < startTime + runTime * 1000.0) {
+            //sim.simulate((System.currentTimeMillis() - startTime) / 1000.0);
+            sim.simulate();
+            try {
+                Thread.sleep((int)(resolution * 1000.0 + 0.5));
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

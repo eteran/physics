@@ -1,5 +1,7 @@
 package com.sultanik.physics;
 
+import java.util.*;
+
 public class DistanceConstraint extends Constraint {
     double distance;
     Particle p1, p2;

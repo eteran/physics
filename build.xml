@@ -1,0 +1,99 @@
+<project name="Physics" default="usage" basedir=".">
+  <description>
+    Physics build file.
+  </description>
+
+  <property name="build.dir" location="bin" />
+  <property name="doc.dir" location="doc" />
+  <property name="jar.dir" location="lib" />
+  <property name="src.dir" location="src" />
+
+  <target name="init">
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${jar.dir}" />
+  </target>
+
+  <path id="physics.classpath">
+    <fileset dir="lib" includes="*.jar" />
+  </path>
+
+  <target name="compile" depends="init" description="compile the source ">
+    <!-- Compile the java code from ${build} -->
+    <javac srcdir="${src.dir}" destdir="${build.dir}" debug="on" deprecation="on">
+      <classpath refid="physics.classpath" />
+      <!-- <compilerarg value="-Xlint" /> -->
+    </javac>
+    <!-- Copy over any images/icons we might have -->
+    <copy todir="${build.dir}">
+      <fileset dir="${src.dir}" includes="**/*.jpg"/>
+      <fileset dir="${src.dir}" includes="**/*.png"/>
+    </copy>
+  </target>
+
+  <target name="jar" depends="compile" description="Make the jar file.">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${jar.dir}" />
+    <jar jarfile="${jar.dir}/physics.jar" basedir="${build.dir}" update="true">
+      <manifest>
+        <attribute name="Created-By" value="Physics" />
+        <attribute name="Main-Class" value="com.sultanik.physics.Simulator" />
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="version" description="Automatically `scrapes' the version from the VERSION member variable in Simulator.java">
+    <exec executable="grep" outputproperty="version.raw">
+      <arg value="VERSION.*=" />
+      <arg value="src/com/sultanik/physics/Simulator.java" />
+    </exec>
+    <exec executable="sed" outputproperty="version.number" inputstring="${version.raw}">
+      <arg value="-e" />
+      <arg value="s/.*&quot;\(.*\)&quot;.*/\1/" />
+    </exec>
+    <echo message="Physics ${version.number}" />
+  </target>
+
+  <!-- JavaDoc -->
+  <target name="javadoc" description="Creates the Java Documentatio API." depends="version">
+    <javadoc packagenames="*.*" sourcepath="${src.dir}" classpathref="physics.classpath" destdir="${doc.dir}/javadoc" author="true" version="true" breakiterator="yes" protected="yes" source="1.5" windowtitle="Physics ${version.number} API Specification" doctitle="Physics ${version.number} API Specification" header="&lt;b&gt;Physics ${version.number}&lt;/b&gt;" bottom="&lt;font size=&quot;-1&quot;&gt;Copyright 2009 &lt;a href=&quot;http://www.sultanik.com/&quot;&gt;Evan Sultanik&lt;/a&gt;&lt;/font&gt;">
+      <link href="http://java.sun.com/j2se/1.5.0/docs/api" />
+    </javadoc>
+  </target>
+
+  <target name="clean" description="delete dist and build directories">
+    <delete dir="${build.dir}" />
+    <delete file="${jar.dir}/physics.jar" />
+  </target>
+
+  <target name="dist" depends="compile,javadoc" description="creates a distribution tarball">
+    <property name="dist.name" value="physics-${version.number}-src" />
+    <property name="dist.dir" value="./.dist/${dist.name}" />
+    <delete dir=".dist" />
+    <mkdir dir=".dist" />
+    <mkdir dir="${dist.dir}" />
+    <mkdir dir="${dist.dir}/src" />
+    <mkdir dir="${dist.dir}/doc" />
+    <mkdir dir="${dist.dir}/doc/javadoc" />
+    <mkdir dir="${dist.dir}/lib" />
+    <copy todir="${dist.dir}/src">
+      <fileset dir="${src.dir}">
+        <include name="**/*.java" />
+      </fileset>
+    </copy>
+    <copy todir="${dist.dir}/doc/javadoc">
+      <fileset dir="${doc.dir}/javadoc">
+        <include name="**/*.html" />
+      </fileset>
+    </copy>
+    <copy todir="${dist.dir}/lib" flatten="true">
+      <fileset dir="${jar.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+    <copy file="build.xml" tofile="${dist.dir}/build.xml" />
+    <tar tarfile="${dist.name}.tar.gz" basedir=".dist" compression="gzip" />
+    <delete dir="${dist.dir}" />
+    <delete dir=".dist" />
+  </target>
+</project>

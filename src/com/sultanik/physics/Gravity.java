@@ -2,7 +2,7 @@ package com.sultanik.physics;
 
 import com.sultanik.physics.ui.GraphicsContext;
 
-public abstract class Gravity implements Force {
+public class Gravity implements Force {
     public Gravity() { }
     public void applyForce(Particle particle) {
         particle.setAccelY(particle.getAccelY() - 9.8);

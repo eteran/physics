@@ -70,6 +70,7 @@ public class Simulator {
                 double tmpY = p.getY();
                 p.setX(2.0 * tmpX - p.getPreviousX() + p.getAccelX() * timeStep * timeStep);
                 p.setY(2.0 * tmpY - p.getPreviousY() + p.getAccelY() * timeStep * timeStep);
+                System.out.println(p.toString());
                 p.setPreviousX(tmpX);
                 p.setPreviousY(tmpY);
             }
@@ -130,6 +131,14 @@ public class Simulator {
             simulate();
     }
 
+    public void addForce(Force force) {
+        forces.add(force);
+    }
+
+    public void addBody(Body body) {
+        bodies.add(body);
+    }
+
     public static void main(String[] args) {
         double resolution = 0.01;
         Simulator sim = new Simulator(resolution);
@@ -143,6 +152,11 @@ public class Simulator {
         double startTime = System.currentTimeMillis();
         double runTime = 10.0; /* seconds */
         double lastTime = startTime;
+
+        sim.addForce(new Gravity());
+        sim.addBody(new Rope(new BasicParticle(10.0, 100.0, 10.0, 100.0, 0.0, 0.0),
+                             new BasicParticle(20.0, 90.0, 20.0, 90.0, 0.0, 0.0)));
+
         while(System.currentTimeMillis() < startTime + runTime * 1000.0) {
             lastTime = System.currentTimeMillis();
             sim.simulate();

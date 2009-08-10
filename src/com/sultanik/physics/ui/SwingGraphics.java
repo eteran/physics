@@ -44,9 +44,9 @@ public class SwingGraphics implements GraphicsContext {
 
     public void drawLine(double x1, double y1, double x2, double y2) {
         graphics.drawLine((int)((x1 - xOffset) * pixelsPerMeter + 0.5),
-                          (int)((y1 - yOffset) * pixelsPerMeter + 0.5),
+                          height - (int)((y1 - yOffset) * pixelsPerMeter + 0.5),
                           (int)((x2 - xOffset) * pixelsPerMeter + 0.5),
-                          (int)((y2 - yOffset) * pixelsPerMeter + 0.5));
+                          height - (int)((y2 - yOffset) * pixelsPerMeter + 0.5));
     }
 
     public void setColor(Color c) {

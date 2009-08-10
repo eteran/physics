@@ -18,6 +18,9 @@ public class BasicParticle implements Particle {
     public BasicParticle(double x, double y, double prevX, double prevY, double accelX, double accelY) {
         this(x, y, prevX, prevY, accelX, accelY, false);
     }    
+    public double getVelocity() {
+        return Math.hypot(getX() - getPreviousX(), getY() - getPreviousY());
+    }
     public double getX() { return x; }
     public double getY() { return y; }
     public void setX(double x) { this.x = x; }

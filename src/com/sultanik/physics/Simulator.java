@@ -49,6 +49,10 @@ public class Simulator {
         return timeStep;
     }
 
+    public double currentTime() {
+        return t;
+    }
+
     void accumulateForces(HashSet<Particle> particles, HashSet<Constraint> constraints) {
         /* first, clear all of the previous forces */
         for(Particle p : particles) {
@@ -155,13 +159,22 @@ public class Simulator {
 
         sim.addForce(new Gravity());
         sim.addForce(new GroundFriction());
-        BasicParticle bp = new BasicParticle(11.0, 11.0, 10.8, 10.8, 0.0, 0.0);
-        Rope rope = new Rope(new BasicParticle(10.0, 10.0, 9.8, 9.8, 0.0, 0.0),
-                             bp);
-        for(int i=0; i<8; i++)
-            rope.addLink(new BasicParticle(9.0 - (double)i, 9.0 - (double)i, 8.8 - (double)i, 8.8 - (double)i, 0.0, 0.0), 1.4142);
-        sim.addBody(rope);
-        //bp.setFixed(true);
+        // BasicParticle bp = new BasicParticle(11.0, 11.0, 10.8, 10.8, 0.0, 0.0);
+        // Rope rope = new Rope(new BasicParticle(10.0, 10.0, 9.8, 9.8, 0.0, 0.0), bp);
+        // for(int i=0; i<8; i++)
+        //     rope.addLink(new BasicParticle(9.0 - (double)i, 9.0 - (double)i, 8.8 - (double)i, 8.8 - (double)i, 0.0, 0.0), 1.4142);
+        // sim.addBody(rope);
+        // //bp.setFixed(true);
+
+        BasicParticle bp = new BasicParticle(2.0,100.0,2.0,100.0,0.0,0.0);
+        bp.setFixed(true);
+        Grapple grapple = new Grapple(sim,
+                                      bp,
+                                      0.0,
+                                      20.0,
+                                      1.0,
+                                      50.0);
+        sim.addBody(grapple);
 
         while(System.currentTimeMillis() < startTime + runTime * 1000.0) {
             lastTime = System.currentTimeMillis();
@@ -169,7 +182,7 @@ public class Simulator {
             int sleepTime = (int)(resolution * 1000.0 - (System.currentTimeMillis() - lastTime) + 0.5);
             if(sleepTime > 0) {
                 try {
-                    Thread.sleep(sleepTime * 10);
+                    Thread.sleep(sleepTime);
                 } catch(Exception e) {
                     e.printStackTrace();
                 }

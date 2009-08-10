@@ -11,6 +11,7 @@ public interface Particle {
     public double getPreviousY();
     public void setPreviousX(double x);
     public void setPreviousY(double y);
+    public double getVelocity();
     public double getAccelX();
     public double getAccelY();
     public void setAccelX(double x);

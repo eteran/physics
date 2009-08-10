@@ -9,7 +9,7 @@ public class Rope implements Body {
     HashSet<Constraint> constraints;
     HashSet<Force> forces;
 
-    public Rope(BasicParticle p1, BasicParticle p2) {
+    public Rope(Particle p1, Particle p2) {
         links = new LinkedList<Particle>();
         constraints = new HashSet<Constraint>();
         forces = new HashSet<Force>();

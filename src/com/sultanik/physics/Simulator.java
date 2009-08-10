@@ -150,25 +150,26 @@ public class Simulator {
         frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         double startTime = System.currentTimeMillis();
-        double runTime = 10.0; /* seconds */
+        double runTime = 120.0; /* seconds */
         double lastTime = startTime;
 
         sim.addForce(new Gravity());
         sim.addForce(new GroundFriction());
+        BasicParticle bp = new BasicParticle(11.0, 11.0, 10.8, 10.8, 0.0, 0.0);
         Rope rope = new Rope(new BasicParticle(10.0, 10.0, 9.8, 9.8, 0.0, 0.0),
-                             new BasicParticle(11.0, 11.0, 10.8, 10.8, 0.0, 0.0));
+                             bp);
         for(int i=0; i<8; i++)
             rope.addLink(new BasicParticle(9.0 - (double)i, 9.0 - (double)i, 8.8 - (double)i, 8.8 - (double)i, 0.0, 0.0), 1.4142);
         sim.addBody(rope);
+        //bp.setFixed(true);
 
         while(System.currentTimeMillis() < startTime + runTime * 1000.0) {
             lastTime = System.currentTimeMillis();
             sim.simulate();
             int sleepTime = (int)(resolution * 1000.0 - (System.currentTimeMillis() - lastTime) + 0.5);
-            //System.out.println("" + sleepTime);
             if(sleepTime > 0) {
                 try {
-                    Thread.sleep(sleepTime);
+                    Thread.sleep(sleepTime * 10);
                 } catch(Exception e) {
                     e.printStackTrace();
                 }

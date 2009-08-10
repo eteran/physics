@@ -46,6 +46,7 @@ public class Rope implements Body {
         for(Particle p : links)
             points[i++] = new java.awt.geom.Point2D.Double(p.getX(), p.getY());
         graphicsContext.setColor(java.awt.Color.BLACK);
+        graphicsContext.setLineThickness(2.0);
         graphicsContext.drawBezier(points);
         // for(Constraint c : constraints) {
         //     if(c instanceof DistanceConstraint) {

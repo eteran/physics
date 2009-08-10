@@ -1,6 +1,7 @@
 package com.sultanik.physics.ui;
 
 import java.awt.*;
+import java.awt.geom.*;
 import javax.swing.*;
 
 public class SwingGraphics implements GraphicsContext {
@@ -47,6 +48,14 @@ public class SwingGraphics implements GraphicsContext {
                           height - (int)((y1 - yOffset) * pixelsPerMeter + 0.5),
                           (int)((x2 - xOffset) * pixelsPerMeter + 0.5),
                           height - (int)((y2 - yOffset) * pixelsPerMeter + 0.5));
+    }
+
+    public void drawBezier(Point2D... knots) {
+        Point2D k[] = new Point2D[knots.length];
+        for(int i=0; i<knots.length; i++)
+            k[i] = new Point2D.Double((knots[i].getX() - xOffset) * pixelsPerMeter,
+                                      (double)height - (knots[i].getY() - yOffset) * pixelsPerMeter);
+        (new Bezier(k)).drawInterpolated(graphics);
     }
 
     public void setColor(Color c) {

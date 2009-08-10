@@ -4,4 +4,5 @@ public interface GraphicsContext {
     public void clear();
     public void drawLine(double x1, double y1, double x2, double y2);
     public void setColor(java.awt.Color c);
+    public void drawBezier(java.awt.geom.Point2D... knots);
 }

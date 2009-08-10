@@ -29,7 +29,7 @@ public class Simulator {
         listeners = new LinkedHashSet<SimulationListener>();
         bodies = new HashSet<Body>();
         forces = new HashSet<Force>();
-        timeStep = 0.01;
+        this.timeStep = timeStep;
         t = 0.0;
     }
 
@@ -55,12 +55,8 @@ public class Simulator {
             p.setAccelX(0.0);
             p.setAccelY(0.0);
         }
-        for(Force f : forces)
-            for(Particle p : particles)
-                f.applyForce(p);
-        for(Force f : forces)
-            for(Constraint c : constraints)
-                f.applyForce(c);
+        for(Force f : getForces())
+            f.applyForce(this);
     }
 
     void vertlet(HashSet<Particle> particles) {
@@ -70,7 +66,6 @@ public class Simulator {
                 double tmpY = p.getY();
                 p.setX(2.0 * tmpX - p.getPreviousX() + p.getAccelX() * timeStep * timeStep);
                 p.setY(2.0 * tmpY - p.getPreviousY() + p.getAccelY() * timeStep * timeStep);
-                System.out.println(p.toString());
                 p.setPreviousX(tmpX);
                 p.setPreviousY(tmpY);
             }
@@ -111,7 +106,12 @@ public class Simulator {
     }
 
     public HashSet<Body> getBodies() { return bodies; }
-    public HashSet<Force> getForces() { return forces; }
+    public HashSet<Force> getForces() { 
+        HashSet<Force> allForces = new HashSet<Force>(forces);
+        for(Body b : bodies)
+            allForces.addAll(b.getForces());
+        return allForces;
+    }
 
     public void simulate() {
         t += timeStep;
@@ -154,8 +154,12 @@ public class Simulator {
         double lastTime = startTime;
 
         sim.addForce(new Gravity());
-        sim.addBody(new Rope(new BasicParticle(10.0, 100.0, 10.0, 100.0, 0.0, 0.0),
-                             new BasicParticle(20.0, 90.0, 20.0, 90.0, 0.0, 0.0)));
+        sim.addForce(new GroundFriction());
+        Rope rope = new Rope(new BasicParticle(10.0, 10.0, 9.8, 9.8, 0.0, 0.0),
+                             new BasicParticle(11.0, 11.0, 10.8, 10.8, 0.0, 0.0));
+        for(int i=0; i<8; i++)
+            rope.addLink(new BasicParticle(9.0 - (double)i, 9.0 - (double)i, 8.8 - (double)i, 8.8 - (double)i, 0.0, 0.0), 1.4142);
+        sim.addBody(rope);
 
         while(System.currentTimeMillis() < startTime + runTime * 1000.0) {
             lastTime = System.currentTimeMillis();

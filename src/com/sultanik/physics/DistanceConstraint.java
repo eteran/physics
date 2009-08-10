@@ -13,6 +13,12 @@ public class DistanceConstraint extends Constraint {
         this.p2 = p2;
         this.distance = distance;
     }
+    public Particle getP1() {
+        return p1;
+    }
+    public Particle getP2() {
+        return p2;
+    }
     protected double satisfy() {
         double deltaX = p2.getX() - p1.getX();
         double deltaY = p2.getY() - p1.getY();

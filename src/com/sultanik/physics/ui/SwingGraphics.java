@@ -9,6 +9,7 @@ public class SwingGraphics implements GraphicsContext {
     double pixelsPerMeter;
     int width, height;
     double xOffset, yOffset;
+    double lineThickness;
 
     public SwingGraphics(Graphics2D graphics, double pixelsPerMeter, int width, int height, double xOffset, double yOffset) {
         this.graphics = graphics;
@@ -17,10 +18,16 @@ public class SwingGraphics implements GraphicsContext {
         this.height = height;
         this.xOffset = xOffset;
         this.yOffset = yOffset;
+        lineThickness = 1.0;
     }
 
     public void setGraphics(Graphics2D graphics) {
         this.graphics = graphics;
+        setLineThickness(getLineThickness());
+    }
+
+    public double getLineThickness() {
+        return lineThickness;
     }
 
     public void setWidth(int width) {
@@ -41,6 +48,11 @@ public class SwingGraphics implements GraphicsContext {
 
     public void clear() {
         graphics.clearRect(0, 0, width, height);
+    }
+
+    public void setLineThickness(double pixels) {
+        lineThickness = pixels;
+	graphics.setStroke(new BasicStroke((float)pixels));
     }
 
     public void drawLine(double x1, double y1, double x2, double y2) {

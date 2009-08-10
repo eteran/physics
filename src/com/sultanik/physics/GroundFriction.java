@@ -14,6 +14,7 @@ public class GroundFriction implements Force {
     }
     public void paint(Simulator simulator, GraphicsContext graphicsContext) {
         graphicsContext.setColor(java.awt.Color.GREEN);
+        graphicsContext.setLineThickness(1.0);
         for(Particle p : simulator.getParticles())
             if(p.getY() == 0.0 && p.getX() != p.getPreviousX())
                 graphicsContext.drawLine(p.getX(), p.getY(), p.getPreviousX(), p.getPreviousY());

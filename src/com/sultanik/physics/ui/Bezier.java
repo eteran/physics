@@ -137,7 +137,6 @@ public class Bezier implements Shape {
     public void drawInterpolated(Graphics g){
 	Graphics2D g2d = (Graphics2D)g;
 	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-	g2d.setStroke(new BasicStroke((float)(3.0)));
         //g2d.drawPolyline(xPoints, yPoints, xPoints.length);
         g2d.draw(path);
         if(drawArrow && arrowHead == null && knots.length >= 2) {

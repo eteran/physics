@@ -24,7 +24,6 @@ public class SimulationPanel extends JPanel implements SimulationListener {
         Graphics2D g2d = (Graphics2D)graphics;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                              RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setStroke(new BasicStroke(3f));
         sg.setGraphics(g2d);
         sg.setWidth(getWidth());
         sg.setHeight(getHeight());

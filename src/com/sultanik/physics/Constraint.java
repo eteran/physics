@@ -1,8 +1,8 @@
 package com.sultanik.physics;
 
-import com.sultanik.physics.ui;
+import com.sultanik.physics.ui.GraphicsContext;
 
-import java.util.HashSet;
+import java.util.*;
 
 public abstract class Constraint implements Iterable<Particle> {
     HashSet<Particle> particles;

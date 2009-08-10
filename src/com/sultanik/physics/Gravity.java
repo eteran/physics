@@ -1,6 +1,6 @@
 package com.sultanik.physics;
 
-import com.sultanik.physics.ui;
+import com.sultanik.physics.ui.GraphicsContext;
 
 public abstract class Gravity implements Force {
     public Gravity() { }
@@ -8,8 +8,9 @@ public abstract class Gravity implements Force {
         particle.setAccelY(particle.getAccelY() - 9.8);
     }
     public void applyForce(Constraint constraint) { }
-    public void paint(GraphicsContext graphicsContext) {
+    public void paint(Simulator simulator, GraphicsContext graphicsContext) {
         graphicsContext.setColor(java.awt.Color.GREEN);
-        graphicsContext.drawLine(particle.getX(), particle.getY(), particle.getX(), particle.getY() - 9.8);
+        for(Particle p : simulator.getParticles())
+            graphicsContext.drawLine(p.getX(), p.getY(), p.getX(), p.getY() - 9.8);
     }
 }

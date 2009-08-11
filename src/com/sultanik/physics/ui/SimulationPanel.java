@@ -20,7 +20,19 @@ public class SimulationPanel extends JPanel implements SimulationListener {
         repaint();
     }
 
+    public void ensureFocus(double x, double y) {
+        sg.ensureFocus(x, y);
+    }
+
     public void paint(Graphics graphics) {
+        synchronized(sg.focusMutex) {
+            if(sg.nextXOffset >= 0.0)
+                sg.xOffset = sg.nextXOffset;
+            if(sg.nextYOffset >= 0.0)
+                sg.yOffset = sg.nextYOffset;
+            sg.nextXOffset = -1.0;
+            sg.nextYOffset = -1.0;
+        }
         Graphics2D g2d = (Graphics2D)graphics;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                              RenderingHints.VALUE_ANTIALIAS_ON);

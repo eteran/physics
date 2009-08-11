@@ -12,4 +12,5 @@ public interface GraphicsContext {
     public double getYOffset();
     public double getWidth();
     public double getHeight();
+    public void ensureFocus(double x, double y);
 }

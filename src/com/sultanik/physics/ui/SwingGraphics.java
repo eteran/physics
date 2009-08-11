@@ -8,8 +8,10 @@ public class SwingGraphics implements GraphicsContext {
     Graphics2D graphics;
     double pixelsPerMeter;
     int width, height;
+    double nextXOffset, nextYOffset;
     double xOffset, yOffset;
     double lineThickness;
+    Object focusMutex = new Object();
 
     public SwingGraphics(Graphics2D graphics, double pixelsPerMeter, int width, int height, double xOffset, double yOffset) {
         this.graphics = graphics;
@@ -18,7 +20,20 @@ public class SwingGraphics implements GraphicsContext {
         this.height = height;
         this.xOffset = xOffset;
         this.yOffset = yOffset;
+        nextXOffset = -1.0;
+        nextYOffset = -1.0;
         lineThickness = 1.0;
+    }
+
+    public void ensureFocus(double x, double y) {
+        synchronized(focusMutex) {
+            nextXOffset = x - getWidth() / 2.0;
+            if(nextXOffset < 0.0)
+                nextXOffset = 0.0;
+            nextYOffset = y - getHeight() / 2.0;
+            if(nextYOffset < 0.0)
+                nextYOffset = 0.0;
+        }
     }
 
     public void setGraphics(Graphics2D graphics) {

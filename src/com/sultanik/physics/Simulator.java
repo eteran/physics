@@ -170,7 +170,7 @@ public class Simulator {
         // sim.addBody(rope);
         // //bp.setFixed(true);
 
-        BasicParticle bp = new BasicParticle(2.0,150.0,2.0,150.0,0.0,0.0);
+        BasicParticle bp = new BasicParticle(2.0,150.0,1.9,150.0,0.0,0.0);
         //bp.setFixed(true);
         Grapple grapple = new Grapple(sim,
                                       bp,
@@ -196,6 +196,7 @@ public class Simulator {
                 grapple.detatchRope();
                 detatched = true;
             }
+            sp.ensureFocus(grapple.getLocation().getX(), grapple.getLocation().getY());
             sim.simulate();
             int sleepTime = (int)(resolution * 1000.0 - (System.currentTimeMillis() - lastTime) + 0.5);
             if(sleepTime > 0) {

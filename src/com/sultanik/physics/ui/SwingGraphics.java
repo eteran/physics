@@ -46,6 +46,11 @@ public class SwingGraphics implements GraphicsContext {
         this.yOffset = yOffset;
     }
 
+    public double getXOffset() { return xOffset; }
+    public double getYOffset() { return yOffset; }
+    public double getWidth() { return (double)width / pixelsPerMeter; }
+    public double getHeight() { return (double)height / pixelsPerMeter; }
+
     public void clear() {
         graphics.clearRect(0, 0, width, height);
     }

@@ -143,6 +143,10 @@ public class Simulator {
         bodies.add(body);
     }
 
+    public void removeBody(Body body) {
+        bodies.remove(body);
+    }
+
     public static void main(String[] args) {
         double resolution = 0.01;
         Simulator sim = new Simulator(resolution);
@@ -166,7 +170,7 @@ public class Simulator {
         // sim.addBody(rope);
         // //bp.setFixed(true);
 
-        BasicParticle bp = new BasicParticle(2.0,100.0,2.0,100.0,0.0,0.0);
+        BasicParticle bp = new BasicParticle(2.0,150.0,2.0,150.0,0.0,0.0);
         //bp.setFixed(true);
         Grapple grapple = new Grapple(sim,
                                       bp,
@@ -176,8 +180,22 @@ public class Simulator {
                                       65.0);
         sim.addBody(grapple);
 
+        boolean grappled = false;
+        boolean attached = false;
+        boolean detatched = false;
+
         while(System.currentTimeMillis() < startTime + runTime * 1000.0) {
             lastTime = System.currentTimeMillis();
+            if(!grappled && sim.currentTime() >= 2.0) {
+                grapple.grapple();
+                grappled = true;
+            } else if(!attached && sim.currentTime() >= 4.0) {
+                grapple.attachGrapple();
+                attached = true;
+            } else if(!detatched && sim.currentTime() >= 6.0) {
+                grapple.detatchRope();
+                detatched = true;
+            }
             sim.simulate();
             int sleepTime = (int)(resolution * 1000.0 - (System.currentTimeMillis() - lastTime) + 0.5);
             if(sleepTime > 0) {

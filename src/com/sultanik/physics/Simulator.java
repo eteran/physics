@@ -171,9 +171,9 @@ public class Simulator {
         Grapple grapple = new Grapple(sim,
                                       bp,
                                       20.0,
-                                      20.0,
-                                      1.5,
-                                      50.0);
+                                      30.0,
+                                      3.0,
+                                      65.0);
         sim.addBody(grapple);
 
         while(System.currentTimeMillis() < startTime + runTime * 1000.0) {

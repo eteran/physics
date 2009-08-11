@@ -18,6 +18,8 @@ public interface Particle {
     public void setAccelY(double y);
     public boolean isFixed();
     public void setFixed(boolean fixed);
+    public boolean isRigid();
+    public void setRigid(boolean rigid);
     public double getDensity();
     public void setDensity(double density);
     public void paint(GraphicsContext graphicsContext);

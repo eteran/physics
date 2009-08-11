@@ -167,12 +167,12 @@ public class Simulator {
         // //bp.setFixed(true);
 
         BasicParticle bp = new BasicParticle(2.0,100.0,2.0,100.0,0.0,0.0);
-        bp.setFixed(true);
+        //bp.setFixed(true);
         Grapple grapple = new Grapple(sim,
                                       bp,
-                                      0.0,
                                       20.0,
-                                      1.0,
+                                      20.0,
+                                      1.5,
                                       50.0);
         sim.addBody(grapple);
 

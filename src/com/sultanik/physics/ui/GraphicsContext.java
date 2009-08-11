@@ -7,4 +7,5 @@ public interface GraphicsContext {
     public void drawBezier(java.awt.geom.Point2D... knots);
     public void setLineThickness(double pixels);
     public double getLineThickness();
+    public void drawString(String text, double x, double y);
 }

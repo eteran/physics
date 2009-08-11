@@ -70,6 +70,12 @@ public class SwingGraphics implements GraphicsContext {
         (new Bezier(k)).drawInterpolated(graphics);
     }
 
+    public void drawString(String text, double x, double y) {
+        graphics.drawString(text,
+                            (int)((x - xOffset) * pixelsPerMeter + 0.5),
+                            height - (int)((y - yOffset) * pixelsPerMeter + 0.5));
+    }
+
     public void setColor(Color c) {
         graphics.setColor(c);
     }

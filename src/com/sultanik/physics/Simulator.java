@@ -5,6 +5,7 @@ import com.sultanik.physics.ui.*;
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.*;
 
 public class Simulator {
     /**
@@ -21,6 +22,7 @@ public class Simulator {
     HashSet<Force> forces;
     double timeStep;
     double t;
+    Object simulationMutex = new Object();
 
     private static final int	CONSTRAINT_SATISFICATION_ITERATIONS	= 100;
     private static final double	CONSTRAINT_SATISFICATION_THRESHOLD	= 0.001;
@@ -34,7 +36,9 @@ public class Simulator {
     }
 
     public void addListener(SimulationListener listener) {
-        listeners.add(listener);
+        synchronized(listeners) {
+            listeners.add(listener);
+        }
     }
 
     public void removeListener(SimulationListener listener) {
@@ -109,7 +113,11 @@ public class Simulator {
         return constraints;        
     }
 
-    public HashSet<Body> getBodies() { return bodies; }
+    public HashSet<Body> getBodies() { 
+        synchronized(getSimulationMutex()) {
+            return bodies;
+        }
+    }
     public HashSet<Force> getForces() { 
         HashSet<Force> allForces = new HashSet<Force>(forces);
         for(Body b : bodies)
@@ -117,17 +125,30 @@ public class Simulator {
         return allForces;
     }
 
+    public Object getSimulationMutex() {
+        return simulationMutex;
+    }
+
     public void simulate() {
-        t += timeStep;
-        HashSet<Particle> particles = getParticles();
-        HashSet<Constraint> constraints = getConstraints();
+        synchronized(simulationMutex) {
+            t += timeStep;
+            HashSet<Particle> particles = getParticles();
+            HashSet<Constraint> constraints = getConstraints();
 
-        accumulateForces(particles, constraints);
-        vertlet(particles);
-        satisfyConstraints(particles, constraints);
+            accumulateForces(particles, constraints);
+            vertlet(particles);
+            satisfyConstraints(particles, constraints);
+        }
 
-        for(SimulationListener sl : listeners)
-            sl.handleIteration(t);
+        synchronized(listeners) {
+            LinkedHashSet<SimulationListener> l = new LinkedHashSet<SimulationListener>(listeners);
+            /* we need to iterate over l as opposed to listeners just
+             * in case one of the listeners removes itself from the
+             * listeners during this iteration (which would otherwise
+             * cause a concurrent modification exception). */
+            for(SimulationListener sl : l)
+                sl.handleIteration(t);
+        }
     }
 
     public void simulate(double untilTime) {
@@ -140,15 +161,48 @@ public class Simulator {
     }
 
     public void addBody(Body body) {
-        bodies.add(body);
+        synchronized(simulationMutex) {
+            bodies.add(body);
+        }
     }
 
     public void removeBody(Body body) {
-        bodies.remove(body);
+        synchronized(getSimulationMutex()) {
+            bodies.remove(body);
+        }
+    }
+
+    private static class Focuser implements FocusProvider {
+        Particle p;
+        public Focuser(Particle p) {
+            this.p = p;
+        }
+        public java.awt.geom.Point2D getFocalPoint() {
+            return new java.awt.geom.Point2D.Double(p.getX(), p.getY());
+        }
+    }
+
+    public static class KeyHandler extends KeyAdapter {
+        Grapple grapple;
+
+        public KeyHandler(Grapple grapple) { this.grapple = grapple; }
+
+        public void keyPressed(KeyEvent e) {
+            synchronized(grapple.simulator.getSimulationMutex()) {
+                if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    grapple.grapple();
+                } else if(e.getKeyChar() == 'a' || e.getKeyChar() == 'A') {
+                    if(grapple.isAttached())
+                        grapple.detatchRope();
+                    else
+                        grapple.attachGrapple();
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
-        double resolution = 0.01;
+        double resolution = 0.02;
         Simulator sim = new Simulator(resolution);
         JFrame frame = new JFrame("Physics");
         SimulationPanel sp = new SimulationPanel(sim);
@@ -180,23 +234,12 @@ public class Simulator {
                                       65.0);
         sim.addBody(grapple);
 
-        boolean grappled = false;
-        boolean attached = false;
-        boolean detatched = false;
+        sp.addKeyListener(new KeyHandler(grapple));
+
+        sp.setFocusProvider(new Focuser(grapple.getLocation()));
 
         while(System.currentTimeMillis() < startTime + runTime * 1000.0) {
             lastTime = System.currentTimeMillis();
-            if(!grappled && sim.currentTime() >= 2.0) {
-                grapple.grapple();
-                grappled = true;
-            } else if(!attached && sim.currentTime() >= 4.0) {
-                grapple.attachGrapple();
-                attached = true;
-            } else if(!detatched && sim.currentTime() >= 6.0) {
-                grapple.detatchRope();
-                detatched = true;
-            }
-            sp.ensureFocus(grapple.getLocation().getX(), grapple.getLocation().getY());
             sim.simulate();
             int sleepTime = (int)(resolution * 1000.0 - (System.currentTimeMillis() - lastTime) + 0.5);
             if(sleepTime > 0) {

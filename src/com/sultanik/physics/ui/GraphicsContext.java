@@ -8,4 +8,8 @@ public interface GraphicsContext {
     public void setLineThickness(double pixels);
     public double getLineThickness();
     public void drawString(String text, double x, double y);
+    public double getXOffset();
+    public double getYOffset();
+    public double getWidth();
+    public double getHeight();
 }

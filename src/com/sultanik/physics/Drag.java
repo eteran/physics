@@ -70,13 +70,13 @@ public class Drag implements Force {
         }
     }
     public void paint(Simulator simulator, GraphicsContext graphicsContext) {
-        // if(magnitude1 != 0.0) {
-        //     graphicsContext.setColor(java.awt.Color.RED);
-        //     graphicsContext.setLineThickness(0.5);
-        //     double length = magnitude1 * Math.hypot(p2.getX() - p1.getX(), p2.getY() - p1.getY());
-        //     double x3 = p1.getX() + length * Math.cos(Math.PI - angleOfAttack);
-        //     double y3 = p1.getY() + length * Math.sin(Math.PI - angleOfAttack);
-        //     graphicsContext.drawLine(p1.getX(), p1.getY(), x3, y3);
-        // }
+        if(magnitude1 != 0.0) {
+            graphicsContext.setColor(java.awt.Color.RED);
+            graphicsContext.setLineThickness(0.5);
+            double length = 10.0 * magnitude1 * Math.hypot(p2.getX() - p1.getX(), p2.getY() - p1.getY());
+            double x3 = p1.getX() - length * Math.cos(Math.PI - angleOfAttack);
+            double y3 = p1.getY() - length * Math.sin(Math.PI - angleOfAttack);
+            graphicsContext.drawLine(p1.getX(), p1.getY(), x3, y3);
+        }
     }
 }

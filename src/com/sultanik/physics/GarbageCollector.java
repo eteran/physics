@@ -4,56 +4,57 @@ import com.sultanik.physics.ui.GraphicsContext;
 
 import java.util.*;
 
-public class GarbageCollector extends Constraint {
+public class GarbageCollector implements SimulationListener {
     Simulator simulator;
     double interval;
     double lastCollectionTime;
     double width, height, xOffset, yOffset;
+    Body body;
 
     private static final double MOTIONLESS_THRESHOLD = 0.001;
 
     public GarbageCollector(Body body, Simulator simulator, double interval) {
-        super(body);
-        body.addConstraint(this);
+        this.body = body;
         this.simulator = simulator;
         this.interval = interval;
         lastCollectionTime = simulator.currentTime() - interval;
         width = -1.0;
+        simulator.addListener(this);
     }
     public void cleanup() {
         System.out.println("Garbage collected!");
-        simulator.removeBody(getBody());
-        getBody().removeConstraint(this);
+        simulator.removeBody(body);
+        simulator.removeListener(this);
     }
-    protected double satisfy() {
+    public void handleIteration(double newTime) {
         /* see if we need to do a garbage collection */
-        if(simulator.currentTime() - lastCollectionTime < interval)
-            return 0.0;
+        if(newTime - lastCollectionTime < interval)
+            return;
         /* we need to garbage collect! */
 
-        System.out.println("Time: " + simulator.currentTime());
-        System.out.println("Garbage collecting!");
+        //System.out.println("Time: " + simulator.currentTime());
+        //System.out.println("Garbage collecting!");
         lastCollectionTime = simulator.currentTime();
 
         /* first, see if the body is motionless */
         boolean motionless = true;
-        for(Particle p : this) {
+        for(Particle p : body.getParticles()) {
             if(p.getVelocity() > MOTIONLESS_THRESHOLD) {
-                System.out.println("Particle " + p + " is not motionless (v = " + p.getVelocity() + ")");
+                //System.out.println("Particle " + p + " is not motionless (v = " + p.getVelocity() + ")");
                 motionless = false;
                 break;
             }
         }
         if(motionless) {
             cleanup();
-            return 0.0;
+            return;
         }
 
         /* next, see if we are offscreen */
         if(width >= 0.0) {
             /* make sure that paint() has been called at least once */
             boolean offscreen = true;
-            for(Particle p : this) {
+            for(Particle p : body.getParticles()) {
                 if((p.getX() >= xOffset && p.getX() <= xOffset + width)
                    ||
                    (p.getY() >= yOffset && p.getY() <= yOffset + height)) {
@@ -63,10 +64,9 @@ public class GarbageCollector extends Constraint {
             }
             if(offscreen) {
                 cleanup();
-                return 0.0;
+                return;
             }
         }
-        return 0.0;
     }
     public void paint(GraphicsContext graphicsContext) {
         width = graphicsContext.getWidth();

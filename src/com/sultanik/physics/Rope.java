@@ -18,7 +18,7 @@ public class Rope implements Body {
         links.addFirst(p2);
         links.addFirst(p1);
         constraints.add(new DistanceConstraint(p1, p2, Math.hypot(p2.getX() - p1.getX(), p2.getY() - p1.getY())));
-        forces.add(new Drag(p1, p2));
+        //forces.add(new Drag(p1, p2));
         color = Color.BLACK;
     }
 

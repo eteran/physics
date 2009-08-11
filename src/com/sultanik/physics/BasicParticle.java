@@ -5,6 +5,7 @@ import com.sultanik.physics.ui.GraphicsContext;
 public class BasicParticle implements Particle {
     double x, y, prevX, prevY, accelX, accelY, density;
     boolean fixed;
+    boolean rigid;
     public BasicParticle(double x, double y, double prevX, double prevY, double accelX, double accelY, boolean fixed) {
         this.x = x;
         this.y = y;
@@ -13,6 +14,7 @@ public class BasicParticle implements Particle {
         this.accelX = accelX;
         this.accelY = accelY;
         this.fixed = fixed;
+        rigid = false;
         density = 0.0;
     }
     public BasicParticle(double x, double y, double prevX, double prevY, double accelX, double accelY) {
@@ -33,6 +35,8 @@ public class BasicParticle implements Particle {
     public double getAccelY() { return accelY; }
     public void setAccelX(double x) { accelX = x; }
     public void setAccelY(double y) { accelY = y; }
+    public boolean isRigid() { return rigid || fixed; };
+    public void setRigid(boolean rigid) { this.rigid = rigid;}
     public boolean isFixed() { return fixed; }
     public void setFixed(boolean fixed) { this.fixed = fixed; }
     public double getDensity() { return density; }

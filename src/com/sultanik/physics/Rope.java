@@ -41,18 +41,18 @@ public class Rope implements Body {
     public void paint(GraphicsContext graphicsContext) {
         if(links.size() <= 0)
             return;
-        // java.awt.geom.Point2D points[] = new java.awt.geom.Point2D[links.size()];
-        // int i=0;
-        // for(Particle p : links)
-        //     points[i++] = new java.awt.geom.Point2D.Double(p.getX(), p.getY());
-        // graphicsContext.setColor(java.awt.Color.BLACK);
-        // graphicsContext.setLineThickness(2.0);
-        // graphicsContext.drawBezier(points);
-        for(Constraint c : constraints) {
-            if(c instanceof DistanceConstraint) {
-                DistanceConstraint dc = (DistanceConstraint)c;
-                graphicsContext.drawLine(dc.getP1().getX(), dc.getP1().getY(), dc.getP2().getX(), dc.getP2().getY());
-            }
-        }
+        graphicsContext.setLineThickness(2.0);
+        java.awt.geom.Point2D points[] = new java.awt.geom.Point2D[links.size()];
+        int i=0;
+        for(Particle p : links)
+            points[i++] = new java.awt.geom.Point2D.Double(p.getX(), p.getY());
+        graphicsContext.setColor(java.awt.Color.BLACK);
+        graphicsContext.drawBezier(points);
+        // for(Constraint c : constraints) {
+        //     if(c instanceof DistanceConstraint) {
+        //         DistanceConstraint dc = (DistanceConstraint)c;
+        //         graphicsContext.drawLine(dc.getP1().getX(), dc.getP1().getY(), dc.getP2().getX(), dc.getP2().getY());
+        //     }
+        // }
     }
 }

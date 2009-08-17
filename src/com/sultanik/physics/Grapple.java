@@ -133,7 +133,6 @@ public class Grapple extends BodyAdapter implements SimulationListener {
     public void paint(GraphicsContext graphicsContext) {
         super.paint(graphicsContext);
         graphicsContext.setColor(java.awt.Color.BLACK);
-        graphicsContext.drawString("P", location.getX(), location.getY() - 2.0);
         graphicsContext.drawString(Integer.toString((int)location.getX()) + "m", graphicsContext.getXOffset() + 2.0, graphicsContext.getYOffset() + graphicsContext.getHeight() - 5.0);
     }
 }

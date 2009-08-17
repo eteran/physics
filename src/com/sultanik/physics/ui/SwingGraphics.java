@@ -66,6 +66,14 @@ public class SwingGraphics implements GraphicsContext {
     public double getWidth() { return (double)width / pixelsPerMeter; }
     public double getHeight() { return (double)height / pixelsPerMeter; }
 
+    public void drawArc(double originX, double originY, double radius, double startAngle, double endAngle) {
+        int x = (int)((originX - xOffset - radius) * pixelsPerMeter + 0.5);
+        int y = (int)((originY - yOffset + radius) * pixelsPerMeter + 0.5);
+        int w = (int)(radius * 2.0 * pixelsPerMeter + 0.5);
+        int h = w;
+        graphics.drawArc(x, height - y, w, h, (int)(Math.toDegrees(startAngle) + 0.5), (int)(Math.toDegrees(endAngle) + 0.5));
+    }
+
     public void clear() {
         graphics.clearRect(0, 0, width, height);
     }
@@ -88,6 +96,13 @@ public class SwingGraphics implements GraphicsContext {
             k[i] = new Point2D.Double((knots[i].getX() - xOffset) * pixelsPerMeter,
                                       (double)height - (knots[i].getY() - yOffset) * pixelsPerMeter);
         (new Bezier(k)).drawInterpolated(graphics);
+    }
+
+    public void fillOval(double x, double y, double w, double h) {
+        graphics.fillOval((int)((x - xOffset) * pixelsPerMeter + 0.5),
+                          height - (int)((y - yOffset) * pixelsPerMeter + 0.5),
+                          (int)(w * pixelsPerMeter + 0.5),
+                          (int)(h * pixelsPerMeter + 0.5));
     }
 
     public void drawString(String text, double x, double y) {

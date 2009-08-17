@@ -20,6 +20,7 @@ public class Simulator {
     LinkedHashSet<SimulationListener> listeners;
     HashSet<Body> bodies;
     HashSet<Force> forces;
+    HashSet<Constraint> constraints;
     double timeStep;
     double t;
     Object simulationMutex = new Object();
@@ -31,6 +32,7 @@ public class Simulator {
         listeners = new LinkedHashSet<SimulationListener>();
         bodies = new HashSet<Body>();
         forces = new HashSet<Force>();
+        constraints = new HashSet<Constraint>();
         this.timeStep = timeStep;
         t = 0.0;
     }
@@ -39,6 +41,14 @@ public class Simulator {
         synchronized(listeners) {
             listeners.add(listener);
         }
+    }
+
+    public void addConstraint(Constraint constraint) {
+        constraints.add(constraint);
+    }
+
+    public void removeConstraint(Constraint constraint) {
+        constraints.remove(constraint);
     }
 
     public void removeListener(SimulationListener listener) {
@@ -110,6 +120,7 @@ public class Simulator {
         HashSet<Constraint> constraints = new HashSet<Constraint>();
         for(Body body : bodies)
             constraints.addAll(body.getConstraints());
+        constraints.addAll(this.constraints);
         return constraints;        
     }
 
@@ -233,7 +244,10 @@ public class Simulator {
                                       3.0,
                                       65.0);
         sim.addBody(grapple);
-
+        Person p = new Person(grapple.getLocation());
+        sim.addBody(p);
+        sim.addConstraint(new DistanceConstraint(p.getRightHand(), grapple.getLocation(), 0.0));
+        
         sp.addKeyListener(new KeyHandler(grapple));
 
         sp.setFocusProvider(new Focuser(grapple.getLocation()));

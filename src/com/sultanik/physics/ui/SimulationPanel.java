@@ -15,7 +15,7 @@ public class SimulationPanel extends JPanel implements SimulationListener {
         super();
         this.simulator = simulator;
         simulator.addListener(this);
-        sg = new SwingGraphics(null, 3.0, getWidth(), getHeight(), 0.0, 0.0);
+        sg = new SwingGraphics(null, 5.0, getWidth(), getHeight(), 0.0, 0.0);
         focusProvider = null;
         setFocusable(true);
         putClientProperty(com.sun.java.swing.SwingUtilities2.AA_TEXT_PROPERTY_KEY, new Boolean(true));

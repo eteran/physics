@@ -207,6 +207,14 @@ public class Simulator {
                         grapple.detatchRope();
                     else
                         grapple.attachGrapple();
+                } else if(e.getKeyCode() == KeyEvent.VK_UP
+                          ||
+                          e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    grapple.setAngle(grapple.getAngle() + 5.0);
+                } else if(e.getKeyCode() == KeyEvent.VK_DOWN
+                          ||
+                          e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    grapple.setAngle(grapple.getAngle() - 5.0);
                 }
             }
         }

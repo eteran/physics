@@ -1,6 +1,6 @@
 package com.sultanik.physics;
 
-import com.sultanik.physics.ui.*;
+import com.sultanik.ui.*;
 
 import java.util.*;
 import java.awt.*;
@@ -220,16 +220,29 @@ public class Simulator {
         }
     }
 
+    private static class Repainter implements RepaintListener {
+        Simulator sim;
+        public Repainter(Simulator sim) {this.sim = sim;}
+        public void paint(GraphicsContext sg) {
+            synchronized(sim.getSimulationMutex()) {
+                for(Constraint c : sim.getConstraints())
+                    c.paint(sg);
+                for(Body b : sim.getBodies())
+                    b.paint(sg);
+                for(Particle p : sim.getParticles())
+                    p.paint(sg);
+                for(Force f : sim.getForces())
+                    f.paint(sim, sg);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         double resolution = 0.02;
         Simulator sim = new Simulator(resolution);
-        JFrame frame = new JFrame("Physics");
-        SimulationPanel sp = new SimulationPanel(sim);
-        sp.setPreferredSize(new Dimension(640,480));
-        frame.add(sp);
-        frame.pack();
-        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        UserInterface ui = new SwingInterface("Physics");
+        ui.addRepaintListener(new Repainter(sim));
+
         double startTime = System.currentTimeMillis();
         double runTime = 120.0; /* seconds */
         double lastTime = startTime;
@@ -256,13 +269,14 @@ public class Simulator {
         sim.addBody(p);
         sim.addConstraint(new DistanceConstraint(p.getRightHand(), grapple.getLocation(), 0.0));
         
-        sp.addKeyListener(new KeyHandler(grapple));
+        ui.addKeyListener(new KeyHandler(grapple));
 
-        sp.setFocusProvider(new Focuser(grapple.getLocation()));
+        ui.setFocusProvider(new Focuser(grapple.getLocation()));
 
         while(System.currentTimeMillis() < startTime + runTime * 1000.0) {
             lastTime = System.currentTimeMillis();
             sim.simulate();
+            ui.repaint();
             int sleepTime = (int)(resolution * 1000.0 - (System.currentTimeMillis() - lastTime) + 0.5);
             if(sleepTime > 0) {
                 try {

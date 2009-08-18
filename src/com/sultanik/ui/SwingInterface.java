@@ -1,25 +1,37 @@
-package com.sultanik.physics.ui;
-
-import com.sultanik.physics.*;
+package com.sultanik.ui;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import javax.swing.*;
+import java.util.*;
 
-public class SimulationPanel extends JPanel implements SimulationListener {
+public class SwingInterface extends JPanel implements UserInterface {
     SwingGraphics sg;
-    Simulator simulator;
     FocusProvider focusProvider;
+    LinkedHashSet<RepaintListener> listeners;
 
-    public SimulationPanel(Simulator simulator) {
+    public SwingInterface(String title) {
         super();
-        this.simulator = simulator;
-        simulator.addListener(this);
-        sg = new SwingGraphics(null, 5.0, getWidth(), getHeight(), 0.0, 0.0);
+        listeners = new LinkedHashSet<RepaintListener>();
+        JFrame frame = new JFrame(title);
+        setPreferredSize(new Dimension(640,480));
         focusProvider = null;
         setFocusable(true);
+        sg = new SwingGraphics(null, 5.0, getWidth(), getHeight(), 0.0, 0.0);
         putClientProperty(com.sun.java.swing.SwingUtilities2.AA_TEXT_PROPERTY_KEY, new Boolean(true));
+        frame.add(this);
+        frame.pack();
+        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
         requestFocusInWindow();
+    }
+
+    public void addRepaintListener(RepaintListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeRepaintListener(RepaintListener listener) {
+        listeners.remove(listener);
     }
 
     public void setFocusProvider(FocusProvider focusProvider) {
@@ -35,7 +47,14 @@ public class SimulationPanel extends JPanel implements SimulationListener {
     }
 
     public void paint(Graphics graphics) {
-        synchronized(simulator.getSimulationMutex()) {
+        Graphics2D g2d = (Graphics2D)graphics;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                             RenderingHints.VALUE_ANTIALIAS_ON);
+        sg.setGraphics(g2d);
+        sg.setWidth(getWidth());
+        sg.setHeight(getHeight());
+        sg.clear();
+
         if(focusProvider != null) {
             Point2D p = focusProvider.getFocalPoint();
             sg.xOffset = p.getX() - sg.getWidth() / 2.0;
@@ -54,21 +73,8 @@ public class SimulationPanel extends JPanel implements SimulationListener {
                 sg.nextYOffset = -1.0;
             }
         }
-        Graphics2D g2d = (Graphics2D)graphics;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                             RenderingHints.VALUE_ANTIALIAS_ON);
-        sg.setGraphics(g2d);
-        sg.setWidth(getWidth());
-        sg.setHeight(getHeight());
-        sg.clear();
-        for(Constraint c : simulator.getConstraints())
-            c.paint(sg);
-        for(Body b : simulator.getBodies())
-            b.paint(sg);
-        for(Particle p : simulator.getParticles())
-            p.paint(sg);
-        for(Force f : simulator.getForces())
-            f.paint(simulator, sg);
-        }
+
+        for(RepaintListener listener : listeners)
+            listener.paint(sg);
     }
 }

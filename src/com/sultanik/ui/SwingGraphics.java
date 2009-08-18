@@ -1,4 +1,4 @@
-package com.sultanik.physics.ui;
+package com.sultanik.ui;
 
 import java.awt.*;
 import java.awt.geom.*;

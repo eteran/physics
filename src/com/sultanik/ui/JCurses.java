@@ -4,16 +4,21 @@ import java.io.*;
 import java.util.*;
 import java.awt.Color;
 import java.lang.reflect.*;
+import java.awt.event.*;
 
-public class JCurses {
+public class JCurses implements UserInterface {
     PrintStream out;
     StringBuffer[] prevBuffer;
     StringBuffer[] buffer;
     int row, col;
     Object swapMutex = new Object();
     int height, width;
-    static Class toolkit = null, charColor = null;
-    static Method clearMethod = null, heightMethod = null, widthMethod = null, printMethod = null;
+    FocusProvider focusProvider;
+    LinkedHashSet<RepaintListener> listeners;
+    LinkedHashSet<KeyListener> keyListeners;
+
+    static Class toolkit = null, charColor = null, inputChar = null;
+    static Method clearMethod = null, heightMethod = null, widthMethod = null, printMethod = null, readMethod = null;
     Color color;
     static Hashtable<Color,Object> charColors = new Hashtable<Color,Object>();
 
@@ -28,10 +33,75 @@ public class JCurses {
                                                         * is
                                                         * performed */
 
+    public void setFocusProvider(FocusProvider focusProvider) {
+        this.focusProvider = focusProvider;
+    }
+    public void addKeyListener(KeyListener listener) {
+        keyListeners.add(listener);
+    }
+    public void removeKeyListener(KeyListener listener) {
+        keyListeners.remove(listener);
+    }
+    public void addRepaintListener(RepaintListener listener) {
+        listeners.add(listener);
+    }
+    public void removeRepaintListener(RepaintListener listener) {
+        listeners.remove(listener);
+    }
+    public void repaint() {
+        clear();
+        //for(RepaintListener listener : listeners)
+        //    listener.paint(
+        refresh();
+    }
+
     public JCurses() {
         this(System.out);
     }
+
+    private static class KeyThread extends Thread {
+        JCurses jc;
+        public KeyThread(JCurses jc) {
+            super();
+            this.jc = jc;
+            if(readMethod != null)
+                start();
+        }
+        public void run() {
+            for(;;) {
+                try {
+                    Object ic = readMethod.invoke(null);
+                    boolean hasCharacter = false;
+                    char c = ' ';
+                    int code = 0;
+                    try {
+                        Method m = inputChar.getMethod("getCharacter");
+                        c = (Character)m.invoke(ic);
+                        hasCharacter = true;
+                    } catch(Exception e) { }
+                    if(!hasCharacter) {
+                        try {
+                            Method m = inputChar.getMethod("getCode");
+                            code = (Integer)m.invoke(ic);
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    KeyboardEvent e;
+                    if(hasCharacter)
+                        e = new KeyboardEvent(c);
+                    else
+                        e = new KeyboardEvent(code);
+                    for(KeyListener l : jc.keyListeners)
+                        l.keyPressed(e);
+                } catch(Exception e) { e.printStackTrace(); }
+            }
+        }
+    }
+
     public JCurses(PrintStream out) {
+        listeners = new LinkedHashSet<RepaintListener>();
+        keyListeners = new LinkedHashSet<KeyListener>();
         if(toolkit == null) {
             try {
                 toolkit = Class.forName("jcurses.system.Toolkit");
@@ -40,6 +110,8 @@ public class JCurses {
                 heightMethod = toolkit.getMethod("getScreenHeight");
                 widthMethod = toolkit.getMethod("getScreenWidth");
                 printMethod = toolkit.getMethod("printString", String.class, int.class, int.class, charColor);
+                readMethod = toolkit.getMethod("readCharacter");
+                inputChar = Class.forName("jcurses.system.InputChar");
             } catch(Exception e) {
                 e.printStackTrace();
             }
@@ -54,6 +126,7 @@ public class JCurses {
         clear();
         row = 0;
         col = 0;
+        KeyThread kt = new KeyThread(this);
     }
 
     /**
@@ -347,15 +420,30 @@ public class JCurses {
         }
     }
 
+    private static class KeyHandler extends KeyAdapter {
+        JCurses jc;
+        String s;
+        public KeyHandler(JCurses jc, String s) {
+            this.jc = jc;
+            this.s = s;
+        }
+        public void keyPressed(KeyEvent e) {
+            s = s + e.getKeyChar();
+        }
+        public String getString() { return s; }
+    }
+
     public static void main(String[] args) {
         JCurses jc = new JCurses();
+        KeyHandler kh = new KeyHandler(jc, "This is a test!");
+        jc.addKeyListener(kh);
         for(int i=0; i<jc.getHeight(); i++) {
             jc.clear();
             jc.moveTo(i,10);
-            jc.print("This is a test!");
+            jc.print(kh.getString());
             jc.refresh();
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch(Exception e) {
                 e.printStackTrace();
             }

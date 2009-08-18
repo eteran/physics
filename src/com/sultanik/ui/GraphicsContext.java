@@ -1,4 +1,4 @@
-package com.sultanik.physics.ui;
+package com.sultanik.ui;
 
 public interface GraphicsContext {
     public void clear();

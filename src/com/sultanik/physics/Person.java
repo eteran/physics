@@ -1,6 +1,6 @@
 package com.sultanik.physics;
 
-import com.sultanik.physics.ui.GraphicsContext;
+import com.sultanik.ui.GraphicsContext;
 
 import java.util.*;
 
@@ -147,7 +147,7 @@ public class Person extends BodyAdapter {
         super.paint(graphicsContext);
         graphicsContext.setColor(java.awt.Color.GREEN);
         graphicsContext.setLineThickness(2.0);
-        for(Constraint c : constraints) {
+        for(Constraint c : getConstraints()) {
             if(c instanceof DistanceConstraint) {
                 DistanceConstraint dc = (DistanceConstraint)c;
                 if(dc == headConstraint) {

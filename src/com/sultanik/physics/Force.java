@@ -1,6 +1,6 @@
 package com.sultanik.physics;
 
-import com.sultanik.physics.ui.GraphicsContext;
+import com.sultanik.ui.GraphicsContext;
 
 public interface Force {
     public void applyForce(Simulator simulator);

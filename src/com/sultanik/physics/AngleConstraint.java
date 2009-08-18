@@ -98,7 +98,7 @@ public class AngleConstraint extends Constraint {
         }
         return 0.0;
     }
-    public void paint(com.sultanik.physics.ui.GraphicsContext graphicsContext) {
+    public void paint(com.sultanik.ui.GraphicsContext graphicsContext) {
         if(ad != 0.0) {
             graphicsContext.setColor(java.awt.Color.RED);
             graphicsContext.drawString(Integer.toString((int)(Math.toDegrees(ad) + 0.5)), pivot.getX() + Math.cos(ad), pivot.getY() + Math.sin(ad));

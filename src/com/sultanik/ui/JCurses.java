@@ -16,6 +16,7 @@ public class JCurses implements UserInterface {
     FocusProvider focusProvider;
     LinkedHashSet<RepaintListener> listeners;
     LinkedHashSet<KeyListener> keyListeners;
+    CursesGraphics cg;
 
     static Class toolkit = null, charColor = null, inputChar = null;
     static Method clearMethod = null, heightMethod = null, widthMethod = null, printMethod = null, readMethod = null;
@@ -50,8 +51,10 @@ public class JCurses implements UserInterface {
     }
     public void repaint() {
         clear();
-        //for(RepaintListener listener : listeners)
-        //    listener.paint(
+        cg.setWidth(getWidth());
+        cg.setHeight(getHeight());
+        for(RepaintListener listener : listeners)
+            listener.paint(cg);
         refresh();
     }
 
@@ -127,6 +130,7 @@ public class JCurses implements UserInterface {
         row = 0;
         col = 0;
         KeyThread kt = new KeyThread(this);
+        cg = new CursesGraphics(this, 0.25, getWidth(), getHeight(), 0.0, 0.0);
     }
 
     /**
@@ -252,6 +256,10 @@ public class JCurses implements UserInterface {
             fieldName = "RED";
         else if(c == Color.WHITE)
             fieldName = "WHITE";
+        else if(c == Color.BLUE)
+            fieldName = "BLUE";
+        else if(c == Color.GREEN)
+            fieldName = "GREEN";
         else
             fieldName = "BLACK";
         try {
@@ -311,6 +319,25 @@ public class JCurses implements UserInterface {
                         }
                     });
             } catch(AbstractMethodError ame) { }
+        }
+    }
+
+    public void print(String text, int x, int y) {
+        synchronized(swapMutex) {
+            for(int i=0; i<text.length(); i++) {
+                if(y >= getHeight())
+                    return;
+                while(buffer[y].length() <= x)
+                    buffer[y].append(' ');
+                char c = text.charAt(i);
+                if(c == '\n') {
+                    x = 0;
+                    y++;
+                } else {
+                    buffer[y].setCharAt(x, text.charAt(i));
+                    x++;
+                }
+            }
         }
     }
 

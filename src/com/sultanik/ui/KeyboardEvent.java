@@ -12,6 +12,6 @@ public class KeyboardEvent extends KeyEvent {
         super(new Canvas(), id++, System.currentTimeMillis(), 0, lookupKeyCode(c), c);
     }
     public static int lookupKeyCode(int key) {
-        return 0;
+        return key;
     }
 }

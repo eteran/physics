@@ -240,7 +240,8 @@ public class Simulator {
     public static void main(String[] args) {
         double resolution = 0.02;
         Simulator sim = new Simulator(resolution);
-        UserInterface ui = new SwingInterface("Physics");
+        //UserInterface ui = new SwingInterface("Physics");
+        UserInterface ui = new JCurses();
         ui.addRepaintListener(new Repainter(sim));
 
         double startTime = System.currentTimeMillis();

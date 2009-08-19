@@ -105,8 +105,10 @@ public class CursesGraphics implements GraphicsContext {
         int TwoDyTwoDx = TwoDy - 2*Dx; // 2*Dy - 2*Dx
         int E = TwoDy - Dx; //2*Dy - Dx
         int y = y1;
-        int xDraw, yDraw;	
+        int xDraw, yDraw;
         int x;
+        int lastX = 0, lastY = 0;
+        String lineChar = "X";
         for(x = x1; x != x2; x += xstep) {		
             if (steep) {			
                 xDraw = y;
@@ -116,8 +118,26 @@ public class CursesGraphics implements GraphicsContext {
                 yDraw = y;
             }
             // plot
-            if(xDraw >= 0 && xDraw < jCurses.getWidth() && yDraw >= 0 && yDraw < jCurses.getHeight())
-                jCurses.print("X", xDraw, yDraw);
+            //            if(xDraw >= 0 && xDraw < jCurses.getWidth() && yDraw >= 0 && yDraw < jCurses.getHeight())
+            //    jCurses.drawString("X", xDraw, yDraw);
+            if(x != x1) {
+                if(yDraw == lastY && ystep < 0)
+                    lineChar = "_";
+                else if(yDraw == lastY)
+                    lineChar = "-";
+                else if(xDraw == lastX)
+                    lineChar = "|";
+                else if((xDraw > lastX && yDraw > lastY)
+                        ||
+                        (xDraw < lastX && yDraw < lastY))
+                    lineChar = "\\";
+                else
+                    lineChar = "/";
+                if(lastX >= 0 && lastX < jCurses.getWidth() && lastY >= 0 && lastY < jCurses.getHeight())
+                    jCurses.drawString(lineChar, lastX, lastY);
+            }
+            lastX = xDraw;
+            lastY = yDraw;
             // next
             if (E > 0) {
                 E += TwoDyTwoDx; //E += 2*Dy - 2*Dx;
@@ -126,6 +146,8 @@ public class CursesGraphics implements GraphicsContext {
                 E += TwoDy; //E += 2*Dy;
             }
         }
+        if(lastX >= 0 && lastX < jCurses.getWidth() && lastY >= 0 && lastY < jCurses.getHeight())
+            jCurses.drawString(lineChar, lastX, lastY);
     }
 
     public void drawBezier(Point2D... knots) {
@@ -137,7 +159,7 @@ public class CursesGraphics implements GraphicsContext {
     }
 
     public void drawString(String text, double x, double y) {
-        jCurses.print(text, (int)((x - xOffset) * pixelsPerMeter + 0.5), jCurses.getHeight() - (int)((y - yOffset) * pixelsPerMeter + 0.5));
+        jCurses.drawString(text, (int)((x - xOffset) * pixelsPerMeter + 0.5), jCurses.getHeight() - (int)((y - yOffset) * pixelsPerMeter + 0.5));
     }
 
     public void setColor(Color c) {

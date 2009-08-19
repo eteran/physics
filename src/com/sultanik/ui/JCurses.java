@@ -23,6 +23,21 @@ public class JCurses implements UserInterface {
     Color color;
     static Hashtable<Color,Object> charColors = new Hashtable<Color,Object>();
 
+    static {
+        try {
+            toolkit = Class.forName("jcurses.system.Toolkit");
+            charColor = Class.forName("jcurses.system.CharColor");
+            clearMethod = toolkit.getMethod("clearScreen", charColor);
+            heightMethod = toolkit.getMethod("getScreenHeight");
+            widthMethod = toolkit.getMethod("getScreenWidth");
+            printMethod = toolkit.getMethod("printString", String.class, int.class, int.class, charColor);
+            readMethod = toolkit.getMethod("readCharacter");
+            inputChar = Class.forName("jcurses.system.InputChar");
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /* TODO: make this higher once I implement the intelligent update mechanism */
     private static final double CLEAR_THRESHOLD = 0.0; /* the
                                                         * percentage
@@ -50,12 +65,26 @@ public class JCurses implements UserInterface {
         listeners.remove(listener);
     }
     public void repaint() {
-        clear();
+        //clear();
+        height = getRealHeight();
+        width = getRealWidth();
         cg.setWidth(getWidth());
         cg.setHeight(getHeight());
+        clearCommand();
+
+        if(focusProvider != null) {
+            java.awt.geom.Point2D p = focusProvider.getFocalPoint();
+            cg.xOffset = p.getX() - cg.getWidth() / 2.0;
+            cg.yOffset = p.getY() - cg.getHeight() / 2.0;
+            if(cg.xOffset < 0.0)
+                cg.xOffset = 0.0;
+            if(cg.yOffset < 0.0)
+                cg.yOffset = 0.0;
+        }
+
         for(RepaintListener listener : listeners)
             listener.paint(cg);
-        refresh();
+        //refresh();
     }
 
     public JCurses() {
@@ -105,20 +134,6 @@ public class JCurses implements UserInterface {
     public JCurses(PrintStream out) {
         listeners = new LinkedHashSet<RepaintListener>();
         keyListeners = new LinkedHashSet<KeyListener>();
-        if(toolkit == null) {
-            try {
-                toolkit = Class.forName("jcurses.system.Toolkit");
-                charColor = Class.forName("jcurses.system.CharColor");
-                clearMethod = toolkit.getMethod("clearScreen", charColor);
-                heightMethod = toolkit.getMethod("getScreenHeight");
-                widthMethod = toolkit.getMethod("getScreenWidth");
-                printMethod = toolkit.getMethod("printString", String.class, int.class, int.class, charColor);
-                readMethod = toolkit.getMethod("readCharacter");
-                inputChar = Class.forName("jcurses.system.InputChar");
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
         try {
             initializeTerminal();
         } catch(Exception e) { }
@@ -130,7 +145,7 @@ public class JCurses implements UserInterface {
         row = 0;
         col = 0;
         KeyThread kt = new KeyThread(this);
-        cg = new CursesGraphics(this, 0.25, getWidth(), getHeight(), 0.0, 0.0);
+        cg = new CursesGraphics(this, 0.4, getWidth(), getHeight(), 0.0, 0.0);
     }
 
     /**
@@ -260,6 +275,12 @@ public class JCurses implements UserInterface {
             fieldName = "BLUE";
         else if(c == Color.GREEN)
             fieldName = "GREEN";
+        else if(c == Color.MAGENTA)
+            fieldName = "MAGENTA";
+        else if(c == Color.CYAN)
+            fieldName = "CYAN";
+        else if(c == Color.YELLOW)
+            fieldName = "YELLOW";
         else
             fieldName = "BLACK";
         try {
@@ -320,6 +341,12 @@ public class JCurses implements UserInterface {
                     });
             } catch(AbstractMethodError ame) { }
         }
+    }
+
+    void drawString(String text, int x, int y) {
+        try {
+            printMethod.invoke(null, text, x, y, getCharColor(color));
+        } catch(Exception e) { e.printStackTrace(); }
     }
 
     public void print(String text, int x, int y) {

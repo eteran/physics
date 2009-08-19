@@ -35,7 +35,7 @@ public class Grapple extends BodyAdapter implements SimulationListener {
     public void detatchRope() {
         if(rope == null)
             return; /* there's no rope to detatch! */
-        rope.setColor(java.awt.Color.GRAY);
+        rope.setColor(java.awt.Color.MAGENTA);
         /* check to see if the rope can be garbage collected every 3 seconds */
         new GarbageCollector(rope, simulator, 3.0);
         /* unlink the last link, if it is linked */

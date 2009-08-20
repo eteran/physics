@@ -2,6 +2,7 @@ package com.sultanik.games;
 
 import java.awt.event.*;
 import java.awt.*;
+import java.util.*;
 
 import com.sultanik.ui.*;
 import com.sultanik.physics.*;
@@ -10,20 +11,100 @@ public class Swinger {
     private static class BuildingCluster {
         Building leftSceneBuilding;
         Building first, last;
+        private enum Operation { PAINT, COLLISION }
+        double xOffset, yOffset, width, height;
+        ArrayList<Building> ordered;
+        double maxX, minX;
 
         public BuildingCluster() {
             leftSceneBuilding = null;
             first = null;
             last = null;
+            ordered = new ArrayList<Building>();
+            minX = Double.MAX_VALUE;
+            maxX = Double.MIN_VALUE;
         }
 
         public void add(double x, double height, double width) {
-            new Building(this, last, x, height, width);
+            ordered.add(new Building(this, last, x, height, width));
+            if(x < minX)
+                minX = x;
+            if(x > maxX)
+                maxX = x;
+        }
+
+        public boolean isIntersecting(double x, double y) {
+            Building b = getClosestTo(x);
+            while(b != null && b.x <= x && b.x + b.width >= x) {
+                if(b.height >= y)
+                    return true;
+                b = b.right;
+            }
+            return false;
+        }
+
+        public Building getClosestTo(double x) {
+            if(ordered.isEmpty())
+                return null;
+            if(x <= minX)
+                return first;
+            if(x >= maxX)
+                return last;
+            int test = (int)((x - minX) / (maxX - minX) * (double)(ordered.size()-1) + 0.5);
+            return getClosestTo(x, 0, test, ordered.size()-1);
+        }
+
+        /**
+         * Returns the leftmost building whose x-value is greater than
+         * or equal to x.  If none exists, then it returns the
+         * rightmost building whose x-value is less than or equal to
+         * x.
+         */
+        Building getClosestTo(double x, int start, int test, int end) {
+            if(start == end)
+                return ordered.get(start);
+            double tx = ordered.get(test).x;
+            if(tx == x) {
+                Building b = ordered.get(test);
+                while(b.left != null && b.left.x == x)
+                    b = b.left;
+                return b;
+            }
+            if(tx > x) {
+                if(test == start)
+                    return ordered.get(test);
+                else
+                    return getClosestTo(x, start, (start + test) / 2, test);
+            } else {
+                if(test == end)
+                    return ordered.get(end);
+                else
+                    return getClosestTo(x, test + 1, (test + end) / 2, end); 
+            }
         }
 
         public void paint(GraphicsContext gc) {
-            if(leftSceneBuilding != null)
-                leftSceneBuilding.paint(gc);
+            xOffset = gc.getXOffset();
+            yOffset = gc.getYOffset();
+            width = gc.getWidth();
+            height = gc.getHeight();
+
+            if(first == null)
+                return;
+            if(leftSceneBuilding == null)
+                leftSceneBuilding = first;
+            while(leftSceneBuilding.left != null && leftSceneBuilding.left.x >= xOffset)
+                leftSceneBuilding = leftSceneBuilding.left;
+            while(leftSceneBuilding.right != null && leftSceneBuilding.right.x + leftSceneBuilding.right.width <= xOffset + width)
+                leftSceneBuilding = leftSceneBuilding.right;
+            if(leftSceneBuilding.x < xOffset)
+                return; /* there are no buildings in the current scene */
+
+            Building b = leftSceneBuilding;
+            while(b != null && b.x + b.width <= xOffset + width) {
+                b.paint(gc);
+                b = b.right;
+            }
         }
     }
     
@@ -56,51 +137,13 @@ public class Swinger {
         public Building getLeft() { return left; }
         public Building getRight() { return right; }
 
-        void internalPaint(GraphicsContext gc) {
+        public void paint(GraphicsContext gc) {
             gc.setLineThickness(4.0);
             gc.setColor(Color.BLUE);
             gc.drawLine(x, 0, x, height);
             gc.drawLine(x, height, x + width, height);
             gc.drawLine(x + width, height, x + width, 0);
             gc.drawLine(x + width, 0, x, 0);
-        }
-
-        public void paint(GraphicsContext gc) {
-            boolean wasFirst = false;
-            if(bc.leftSceneBuilding == this) {
-                bc.leftSceneBuilding = null;
-                wasFirst = true;
-            }
-            if(x + width < gc.getXOffset()) {
-                if(right == null) {
-                    if(bc.leftSceneBuilding == null)
-                        bc.leftSceneBuilding = bc.first;
-                    return;
-                } else
-                    right.paint(gc);
-            } else if(x > gc.getXOffset() + gc.getWidth()) {
-                if(wasFirst) {
-                    /* see if anyone to our left is available */
-                    Building lsb = this;
-                    while(lsb.left != null && lsb.left.x > gc.getXOffset() + gc.getWidth())
-                        lsb = lsb.left;
-                    if(lsb.x <= gc.getXOffset() + gc.getWidth()) {
-                        /* we found a left neighbor that is on the screen */
-                        bc.leftSceneBuilding = lsb;
-                        lsb.paint(gc);
-                        return;
-                    }
-                }
-                if(bc.leftSceneBuilding == null)
-                    bc.leftSceneBuilding = bc.first;
-                return;
-            } else {
-                if(bc.leftSceneBuilding == null)
-                    bc.leftSceneBuilding = this;
-                internalPaint(gc);
-                if(right != null)
-                    right.paint(gc);
-            }
         }
     }
 
@@ -126,8 +169,6 @@ public class Swinger {
                 } else if(e.getKeyChar() == 'a' || e.getKeyChar() == 'A') {
                     if(grapple.isAttached())
                         grapple.detatchRope();
-                    else
-                        grapple.attachGrapple();
                 } else if(e.getKeyCode() == KeyEvent.VK_UP
                           ||
                           e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -150,6 +191,12 @@ public class Swinger {
             synchronized(sim.getSimulationMutex()) {
                 /* draw the buildings first */
                 bc.paint(sg);
+
+                if(grapple.getGrapple() != null) {
+                    if(bc.isIntersecting(grapple.getGrapple().getX(), grapple.getGrapple().getY()))
+                        grapple.attachGrapple();
+                }
+
                 /* draw the grapple second */
                 grapple.paint(sg);
                 for(Constraint c : sim.getConstraints())

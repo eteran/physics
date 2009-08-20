@@ -1,11 +1,109 @@
 package com.sultanik.games;
 
 import java.awt.event.*;
+import java.awt.*;
 
 import com.sultanik.ui.*;
 import com.sultanik.physics.*;
 
 public class Swinger {
+    private static class BuildingCluster {
+        Building leftSceneBuilding;
+        Building first, last;
+
+        public BuildingCluster() {
+            leftSceneBuilding = null;
+            first = null;
+            last = null;
+        }
+
+        public void add(double x, double height, double width) {
+            new Building(this, last, x, height, width);
+        }
+
+        public void paint(GraphicsContext gc) {
+            if(leftSceneBuilding != null)
+                leftSceneBuilding.paint(gc);
+        }
+    }
+    
+    private static class Building {
+        double height;
+        Building left, right;
+        double x, width;
+        BuildingCluster bc;
+
+        public Building(BuildingCluster bc, double x, double height, double width) {
+            this(bc, null, x, height, width);
+        }
+
+        public Building(BuildingCluster bc, Building left, double x, double height, double width) {
+            this.bc = bc;
+            this.x = x;
+            this.height = height;
+            this.width = width;
+            bc.last = this;
+            if(left == null) {
+                bc.first = this;
+                bc.leftSceneBuilding = this;
+            }
+            if(left != null)
+                left.right = this;
+            bc.last = this;
+            this.left = left;
+        }
+
+        public Building getLeft() { return left; }
+        public Building getRight() { return right; }
+
+        void internalPaint(GraphicsContext gc) {
+            gc.setLineThickness(4.0);
+            gc.setColor(Color.BLUE);
+            gc.drawLine(x, 0, x, height);
+            gc.drawLine(x, height, x + width, height);
+            gc.drawLine(x + width, height, x + width, 0);
+            gc.drawLine(x + width, 0, x, 0);
+        }
+
+        public void paint(GraphicsContext gc) {
+            boolean wasFirst = false;
+            if(bc.leftSceneBuilding == this) {
+                bc.leftSceneBuilding = null;
+                wasFirst = true;
+            }
+            if(x + width < gc.getXOffset()) {
+                if(right == null) {
+                    if(bc.leftSceneBuilding == null)
+                        bc.leftSceneBuilding = bc.first;
+                    return;
+                } else
+                    right.paint(gc);
+            } else if(x > gc.getXOffset() + gc.getWidth()) {
+                if(wasFirst) {
+                    /* see if anyone to our left is available */
+                    Building lsb = this;
+                    while(lsb.left != null && lsb.left.x > gc.getXOffset() + gc.getWidth())
+                        lsb = lsb.left;
+                    if(lsb.x <= gc.getXOffset() + gc.getWidth()) {
+                        /* we found a left neighbor that is on the screen */
+                        bc.leftSceneBuilding = lsb;
+                        lsb.paint(gc);
+                        return;
+                    }
+                }
+                if(bc.leftSceneBuilding == null)
+                    bc.leftSceneBuilding = bc.first;
+                return;
+            } else {
+                if(bc.leftSceneBuilding == null)
+                    bc.leftSceneBuilding = this;
+                internalPaint(gc);
+                if(right != null)
+                    right.paint(gc);
+            }
+        }
+    }
+
     private static class Focuser implements FocusProvider {
         Particle p;
         public Focuser(Particle p) {
@@ -46,10 +144,13 @@ public class Swinger {
     private static class Repainter implements RepaintListener {
         Simulator sim;
         Grapple grapple;
-        public Repainter(Simulator sim, Grapple grapple) {this.sim = sim;this.grapple = grapple;}
+        BuildingCluster bc;
+        public Repainter(Simulator sim, Grapple grapple, BuildingCluster bc) {this.sim = sim;this.grapple = grapple; this.bc = bc;}
         public void paint(GraphicsContext sg) {
             synchronized(sim.getSimulationMutex()) {
-                /* draw the grapple first */
+                /* draw the buildings first */
+                bc.paint(sg);
+                /* draw the grapple second */
                 grapple.paint(sg);
                 for(Constraint c : sim.getConstraints())
                     c.paint(sg);
@@ -65,6 +166,11 @@ public class Swinger {
     }
 
     public static void main(String[] args) {
+        /* construct the buildings */
+        BuildingCluster bc = new BuildingCluster();
+        bc.add(10.0, 100.0, 5.0);
+        bc.add(30.0, 50.0, 5.0);
+
         double resolution = 0.02;
         Simulator sim = new Simulator(resolution);
         UserInterface ui = new SwingInterface("Physics");
@@ -86,7 +192,7 @@ public class Swinger {
                                       3.0,
                                       65.0);
 
-        ui.addRepaintListener(new Repainter(sim, grapple));
+        ui.addRepaintListener(new Repainter(sim, grapple, bc));
 
         sim.addBody(grapple);
         Person p = new Person(grapple.getLocation());

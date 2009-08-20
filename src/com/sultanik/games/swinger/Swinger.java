@@ -26,7 +26,11 @@ public class Swinger {
         }
 
         public void add(double x, double height, double width) {
-            ordered.add(new Building(this, last, x, height, width));
+            System.out.println("add(" + x + ", " + height + ", " + width);
+            last = new Building(last, x, height, width);
+            ordered.add(last);
+            if(first == null)
+                first = last;
             if(x < minX)
                 minX = x;
             if(x > maxX)
@@ -93,15 +97,16 @@ public class Swinger {
                 return;
             if(leftSceneBuilding == null)
                 leftSceneBuilding = first;
-            while(leftSceneBuilding.left != null && leftSceneBuilding.left.x >= xOffset)
-                leftSceneBuilding = leftSceneBuilding.left;
             while(leftSceneBuilding.right != null && leftSceneBuilding.right.x + leftSceneBuilding.right.width <= xOffset + width)
                 leftSceneBuilding = leftSceneBuilding.right;
             if(leftSceneBuilding.x < xOffset)
                 return; /* there are no buildings in the current scene */
+            while(leftSceneBuilding.left != null && leftSceneBuilding.left.x >= xOffset)
+                leftSceneBuilding = leftSceneBuilding.left;
 
             Building b = leftSceneBuilding;
             while(b != null && b.x + b.width <= xOffset + width) {
+                System.out.println("Painting building at " + b.x);
                 b.paint(gc);
                 b = b.right;
             }
@@ -112,26 +117,19 @@ public class Swinger {
         double height;
         Building left, right;
         double x, width;
-        BuildingCluster bc;
 
-        public Building(BuildingCluster bc, double x, double height, double width) {
-            this(bc, null, x, height, width);
+        public Building(double x, double height, double width) {
+            this(null, x, height, width);
         }
 
-        public Building(BuildingCluster bc, Building left, double x, double height, double width) {
-            this.bc = bc;
+        public Building(Building left, double x, double height, double width) {
             this.x = x;
             this.height = height;
             this.width = width;
-            bc.last = this;
-            if(left == null) {
-                bc.first = this;
-                bc.leftSceneBuilding = this;
-            }
             if(left != null)
                 left.right = this;
-            bc.last = this;
             this.left = left;
+            right = null;
         }
 
         public Building getLeft() { return left; }
@@ -214,9 +212,17 @@ public class Swinger {
 
     public static void main(String[] args) {
         /* construct the buildings */
+        int numBuildings = 50;
+        double buildingInterval = 15.0;
+        double averageHeight = 180.0;
+        double heightVariance = 30.0;
+
         BuildingCluster bc = new BuildingCluster();
-        bc.add(10.0, 100.0, 5.0);
-        bc.add(30.0, 50.0, 5.0);
+        for(int i=0; i<numBuildings; i++) {
+            bc.add(20.0 + (double)i * (5.0 + buildingInterval),
+                   averageHeight,
+                   5.0);
+        }
 
         double resolution = 0.02;
         Simulator sim = new Simulator(resolution);

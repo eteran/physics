@@ -145,7 +145,7 @@ public class JCurses implements UserInterface {
         row = 0;
         col = 0;
         KeyThread kt = new KeyThread(this);
-        cg = new CursesGraphics(this, 0.4, getWidth(), getHeight(), 0.0, 0.0);
+        cg = new CursesGraphics(this, 0.6, getWidth(), getHeight(), 0.0, 0.0);
     }
 
     /**

@@ -32,6 +32,8 @@ public class Grapple extends BodyAdapter implements SimulationListener {
         grappled = false;
     }
 
+    public Simulator getSimulator() { return simulator; }
+
     public void detatchRope() {
         if(rope == null)
             return; /* there's no rope to detatch! */
@@ -139,9 +141,6 @@ public class Grapple extends BodyAdapter implements SimulationListener {
     }
 
     public void paint(GraphicsContext graphicsContext) {
-        super.paint(graphicsContext);
-        graphicsContext.setColor(java.awt.Color.BLACK);
-        graphicsContext.drawString(Integer.toString((int)location.getX()) + "m", graphicsContext.getXOffset() + 2.0, graphicsContext.getYOffset() + graphicsContext.getHeight() - 5.0);
         graphicsContext.setColor(java.awt.Color.BLUE);
         graphicsContext.setLineThickness(0.5);
         double length = Math.max(graphicsContext.getWidth(), graphicsContext.getHeight());
@@ -149,5 +148,8 @@ public class Grapple extends BodyAdapter implements SimulationListener {
                                  getLocation().getY(),
                                  getLocation().getX() + length * Math.cos(Math.toRadians(angle)),
                                  getLocation().getY() + length * Math.sin(Math.toRadians(angle)));
+        super.paint(graphicsContext);
+        graphicsContext.setColor(java.awt.Color.BLACK);
+        graphicsContext.drawString(Integer.toString((int)location.getX()) + "m", graphicsContext.getXOffset() + 2.0, graphicsContext.getYOffset() + graphicsContext.getHeight() - 5.0);
     }
 }

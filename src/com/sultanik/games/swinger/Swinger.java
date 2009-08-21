@@ -26,7 +26,6 @@ public class Swinger {
         }
 
         public void add(double x, double height, double width) {
-            System.out.println("add(" + x + ", " + height + ", " + width);
             last = new Building(last, x, height, width);
             ordered.add(last);
             if(first == null)
@@ -59,9 +58,9 @@ public class Swinger {
         }
 
         /**
-         * Returns the leftmost building whose x-value is greater than
+         * Returns the leftmost building whose x-value is less than
          * or equal to x.  If none exists, then it returns the
-         * rightmost building whose x-value is less than or equal to
+         * rightmost building whose x-value is greater than or equal to
          * x.
          */
         Building getClosestTo(double x, int start, int test, int end) {
@@ -80,10 +79,10 @@ public class Swinger {
                 else
                     return getClosestTo(x, start, (start + test) / 2, test);
             } else {
-                if(test == end)
-                    return ordered.get(end);
+                if(test >= end - 1)
+                    return ordered.get(test);
                 else
-                    return getClosestTo(x, test + 1, (test + end) / 2, end); 
+                    return getClosestTo(x, test, (test + end) / 2, end); 
             }
         }
 
@@ -106,7 +105,6 @@ public class Swinger {
 
             Building b = leftSceneBuilding;
             while(b != null && b.x + b.width <= xOffset + width) {
-                System.out.println("Painting building at " + b.x);
                 b.paint(gc);
                 b = b.right;
             }
@@ -210,17 +208,36 @@ public class Swinger {
         }
     }
 
+    public static double generateNormal(double mean, double var) {
+        return generateNormal(mean, var, Math.random(), Math.random());
+    }
+
+    static final double sqrt2 = Math.sqrt(2);
+
+    public static double generateNormal(double mean, double var, double uniformRand1, double uniformRand2) {
+        double w;
+        do {
+            uniformRand1 = 2.0 * Math.random() - 1.0;
+            uniformRand2 = 2.0 * Math.random() - 1.0;
+            w = uniformRand1 * uniformRand1 + uniformRand2 * uniformRand2;
+        } while(w >= 1.0);
+        w = Math.sqrt((-2.0 * Math.log(w)) / w);
+        return mean + var * uniformRand1 * w;
+        //return mean + var * sqrt2 * inverf(2.0 * uniformRand - 1.0);
+    }
+
     public static void main(String[] args) {
         /* construct the buildings */
         int numBuildings = 50;
-        double buildingInterval = 15.0;
-        double averageHeight = 180.0;
-        double heightVariance = 30.0;
+        double buildingInterval = 30.0;
+        double averageHeight = 120.0;
+        double heightVariance = 50.0;
 
         BuildingCluster bc = new BuildingCluster();
         for(int i=0; i<numBuildings; i++) {
+            double r = Math.random();
             bc.add(20.0 + (double)i * (5.0 + buildingInterval),
-                   averageHeight,
+                   generateNormal(averageHeight, heightVariance),
                    5.0);
         }
 

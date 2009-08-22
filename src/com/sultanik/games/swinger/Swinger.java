@@ -181,8 +181,9 @@ public class Swinger {
     private static class Repainter implements RepaintListener {
         Simulator sim;
         Grapple grapple;
+        Person person;
         BuildingCluster bc;
-        public Repainter(Simulator sim, Grapple grapple, BuildingCluster bc) {this.sim = sim;this.grapple = grapple; this.bc = bc;}
+        public Repainter(Simulator sim, Grapple grapple, Person person, BuildingCluster bc) {this.sim = sim;this.grapple = grapple; this.bc = bc; this.person = person;}
         public void paint(GraphicsContext sg) {
             synchronized(sim.getSimulationMutex()) {
                 /* draw the buildings first */
@@ -192,6 +193,9 @@ public class Swinger {
                     if(bc.isIntersecting(grapple.getGrapple().getX(), grapple.getGrapple().getY()))
                         grapple.attachGrapple();
                 }
+
+                if(person.isBroken())
+                    grapple.detatchRope();
 
                 /* draw the grapple second */
                 grapple.paint(sg);
@@ -253,7 +257,7 @@ public class Swinger {
         sim.addForce(new Gravity());
         sim.addForce(new GroundFriction());
 
-        BasicParticle bp = new BasicParticle(2.0,150.0,1.9,150.0,0.0,0.0);
+        BasicParticle bp = new BasicParticle(1.9,150.0,1.8999,150.0,0.0,0.0);
         //bp.setFixed(true);
         Grapple grapple = new Grapple(sim,
                                       bp,
@@ -262,11 +266,12 @@ public class Swinger {
                                       3.0,
                                       65.0);
 
-        ui.addRepaintListener(new Repainter(sim, grapple, bc));
-
         sim.addBody(grapple);
         Person p = new Person(grapple.getLocation());
         sim.addBody(p);
+
+        ui.addRepaintListener(new Repainter(sim, grapple, p, bc));
+
         sim.addConstraint(new DistanceConstraint(p.getRightHand(), grapple.getLocation(), 0.0));
         
         ui.addKeyListener(new KeyHandler(grapple));

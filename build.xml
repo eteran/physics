@@ -37,7 +37,7 @@
     <jar jarfile="${jar.dir}/physics.jar" basedir="${build.dir}" update="true">
       <manifest>
         <attribute name="Created-By" value="Physics" />
-        <attribute name="Main-Class" value="com.sultanik.physics.Simulator" />
+        <attribute name="Main-Class" value="com.sultanik.games.Swinger" />
       </manifest>
     </jar>
   </target>

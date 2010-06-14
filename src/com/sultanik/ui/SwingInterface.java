@@ -18,7 +18,7 @@ public class SwingInterface extends JPanel implements UserInterface {
         focusProvider = null;
         setFocusable(true);
         sg = new SwingGraphics(null, 5.0, getWidth(), getHeight(), 0.0, 0.0);
-        putClientProperty(com.sun.java.swing.SwingUtilities2.AA_TEXT_PROPERTY_KEY, new Boolean(true));
+        //putClientProperty(com.sun.java.swing.SwingUtilities2.AA_TEXT_PROPERTY_KEY, new Boolean(true));
         frame.add(this);
         frame.pack();
         frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);

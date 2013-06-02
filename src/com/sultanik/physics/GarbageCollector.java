@@ -2,8 +2,6 @@ package com.sultanik.physics;
 
 import com.sultanik.ui.GraphicsContext;
 
-import java.util.*;
-
 public class GarbageCollector implements SimulationListener {
     Simulator simulator;
     double interval;

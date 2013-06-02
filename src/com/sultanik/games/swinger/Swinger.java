@@ -1,18 +1,32 @@
-package com.sultanik.games;
+package com.sultanik.games.swinger;
 
-import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
-import com.sultanik.ui.*;
-import com.sultanik.physics.*;
+import com.sultanik.physics.BasicParticle;
+import com.sultanik.physics.Body;
+import com.sultanik.physics.Constraint;
+import com.sultanik.physics.DistanceConstraint;
+import com.sultanik.physics.Force;
+import com.sultanik.physics.Grapple;
+import com.sultanik.physics.Gravity;
+import com.sultanik.physics.GroundFriction;
+import com.sultanik.physics.Particle;
+import com.sultanik.physics.Person;
+import com.sultanik.physics.Simulator;
+import com.sultanik.ui.FocusProvider;
+import com.sultanik.ui.GraphicsContext;
+import com.sultanik.ui.RepaintListener;
+import com.sultanik.ui.SwingInterface;
+import com.sultanik.ui.UserInterface;
 
 public class Swinger {
     private static class BuildingCluster {
         Building leftSceneBuilding;
         Building first, last;
-        private enum Operation { PAINT, COLLISION }
-        double xOffset, yOffset, width, height;
+        double xOffset, width;
         ArrayList<Building> ordered;
         double maxX, minX;
 
@@ -36,7 +50,7 @@ public class Swinger {
                 maxX = x;
         }
 
-        public boolean isIntersecting(double x, double y) {
+		public boolean isIntersecting(double x, double y) {
             Building b = getClosestTo(x);
             while(b != null && b.x <= x && b.x + b.width >= x) {
                 if(b.height >= y)
@@ -88,9 +102,7 @@ public class Swinger {
 
         public void paint(GraphicsContext gc) {
             xOffset = gc.getXOffset();
-            yOffset = gc.getYOffset();
             width = gc.getWidth();
-            height = gc.getHeight();
 
             if(first == null)
                 return;
@@ -116,7 +128,8 @@ public class Swinger {
         Building left, right;
         double x, width;
 
-        public Building(double x, double height, double width) {
+        @SuppressWarnings("unused")
+		public Building(double x, double height, double width) {
             this(null, x, height, width);
         }
 
@@ -130,8 +143,10 @@ public class Swinger {
             right = null;
         }
 
-        public Building getLeft() { return left; }
-        public Building getRight() { return right; }
+        @SuppressWarnings("unused")
+		public Building getLeft() { return left; }
+        @SuppressWarnings("unused")
+		public Building getRight() { return right; }
 
         public void paint(GraphicsContext gc) {
             gc.setLineThickness(4.0);
@@ -145,7 +160,7 @@ public class Swinger {
 
     private static class Focuser implements FocusProvider {
         Particle p;
-        public Focuser(Particle p) {
+		public Focuser(Particle p) {
             this.p = p;
         }
         public java.awt.geom.Point2D getFocalPoint() {
@@ -239,7 +254,6 @@ public class Swinger {
 
         BuildingCluster bc = new BuildingCluster();
         for(int i=0; i<numBuildings; i++) {
-            double r = Math.random();
             bc.add(20.0 + (double)i * (5.0 + buildingInterval),
                    generateNormal(averageHeight, heightVariance),
                    5.0);
@@ -251,7 +265,7 @@ public class Swinger {
         //UserInterface ui = new JCurses();
 
         double startTime = System.currentTimeMillis();
-        double runTime = 120.0; /* seconds */
+        //double runTime = 120.0; /* seconds */
         double lastTime = startTime;
 
         sim.addForce(new Gravity());

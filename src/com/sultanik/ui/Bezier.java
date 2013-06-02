@@ -1,9 +1,18 @@
 package com.sultanik.ui;
 
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.*;
-import java.util.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.LinkedList;
 
 public class Bezier implements Shape {
     Point2D[] knots;

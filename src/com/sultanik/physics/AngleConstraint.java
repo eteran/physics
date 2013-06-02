@@ -1,6 +1,6 @@
 package com.sultanik.physics;
 
-import java.util.*;
+import java.util.HashSet;
 
 public class AngleConstraint extends Constraint {
     double minAngle, maxAngle;
@@ -66,12 +66,12 @@ public class AngleConstraint extends Constraint {
             System.out.println("Rotating " + (int)(Math.toDegrees(rotate) + 0.5) + " degrees counter-clockwise...");
             
             if(rotate != 0.0) {
-                BasicParticle par1;
+                //BasicParticle par1;
                 BasicParticle par2;
-                if(p1 instanceof BasicParticle)
-                    par1 = (BasicParticle)p1;
-                else
-                    par1 = new BasicParticle(p1);
+//                if(p1 instanceof BasicParticle)
+//                    par1 = (BasicParticle)p1;
+//                else
+//                    par1 = new BasicParticle(p1);
                 if(p2 instanceof BasicParticle)
                     par2 = (BasicParticle)p1;
                 else

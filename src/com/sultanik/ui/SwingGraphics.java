@@ -1,8 +1,9 @@
 package com.sultanik.ui;
 
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 
 public class SwingGraphics implements GraphicsContext {
     Graphics2D graphics;

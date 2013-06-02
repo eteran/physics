@@ -1,10 +1,17 @@
 package com.sultanik.ui;
 
-import java.io.*;
-import java.util.*;
 import java.awt.Color;
-import java.lang.reflect.*;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.lang.reflect.Method;
+import java.util.Hashtable;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 public class JCurses implements UserInterface {
     PrintStream out;
@@ -18,7 +25,7 @@ public class JCurses implements UserInterface {
     LinkedHashSet<KeyListener> keyListeners;
     CursesGraphics cg;
 
-    static Class toolkit = null, charColor = null, inputChar = null;
+    static Class<?> toolkit = null, charColor = null, inputChar = null;
     static Method clearMethod = null, heightMethod = null, widthMethod = null, printMethod = null, readMethod = null;
     Color color;
     static Hashtable<Color,Object> charColors = new Hashtable<Color,Object>();
@@ -91,7 +98,8 @@ public class JCurses implements UserInterface {
         this(System.out);
     }
 
-    private static class KeyThread extends Thread {
+    @SuppressWarnings("unused")
+	private static class KeyThread extends Thread {
         JCurses jc;
         public KeyThread(JCurses jc) {
             super();
@@ -144,7 +152,7 @@ public class JCurses implements UserInterface {
         clear();
         row = 0;
         col = 0;
-        KeyThread kt = new KeyThread(this);
+        //KeyThread kt = new KeyThread(this);
         cg = new CursesGraphics(this, 0.6, getWidth(), getHeight(), 0.0, 0.0);
     }
 
@@ -392,12 +400,12 @@ public class JCurses implements UserInterface {
     }
 
     private static class CharUpdate {
-        public int row, col;
-        public char newChar;
+//        public int row, col;
+//        public char newChar;
         public CharUpdate(int row, int col, char newChar) {
-            this.row = row;
-            this.col = col;
-            this.newChar = newChar;
+//            this.row = row;
+//            this.col = col;
+//            this.newChar = newChar;
         }
     }
 
@@ -466,19 +474,17 @@ public class JCurses implements UserInterface {
             }
         } else if(!newChars.isEmpty()) {
             /* print the new characters one-by-one */
-            int curX = col;
-            int curY = row;
-            for(CharUpdate c : newChars) {
-                /* TODO: finish this! */
-            }
+//            int curX = col;
+//            int curY = row;
+//            for(CharUpdate c : newChars) {
+//                /* TODO: finish this! */
+//            }
         }
     }
 
     private static class KeyHandler extends KeyAdapter {
-        JCurses jc;
         String s;
-        public KeyHandler(JCurses jc, String s) {
-            this.jc = jc;
+        public KeyHandler(String s) {
             this.s = s;
         }
         public void keyPressed(KeyEvent e) {
@@ -489,7 +495,7 @@ public class JCurses implements UserInterface {
 
     public static void main(String[] args) {
         JCurses jc = new JCurses();
-        KeyHandler kh = new KeyHandler(jc, "This is a test!");
+        KeyHandler kh = new KeyHandler("This is a test!");
         jc.addKeyListener(kh);
         for(int i=0; i<jc.getHeight(); i++) {
             jc.clear();

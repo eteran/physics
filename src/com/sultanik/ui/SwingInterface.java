@@ -1,12 +1,18 @@
 package com.sultanik.ui;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
-import javax.swing.*;
-import java.util.*;
+import java.util.LinkedHashSet;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class SwingInterface extends JPanel implements UserInterface {
-    SwingGraphics sg;
+	private static final long serialVersionUID = 1L;
+	SwingGraphics sg;
     FocusProvider focusProvider;
     LinkedHashSet<RepaintListener> listeners;
 
@@ -21,7 +27,7 @@ public class SwingInterface extends JPanel implements UserInterface {
         //putClientProperty(com.sun.java.swing.SwingUtilities2.AA_TEXT_PROPERTY_KEY, new Boolean(true));
         frame.add(this);
         frame.pack();
-        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         requestFocusInWindow();
     }

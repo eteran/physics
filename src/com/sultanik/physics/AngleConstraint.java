@@ -7,6 +7,8 @@ public class AngleConstraint extends Constraint {
     Particle p1, pivot, p2;
     public AngleConstraint(Particle p1, Particle pivot, Particle p2, double minAngle, double maxAngle) {
         super(new HashSet<Particle>());
+        assert maxAngle > minAngle;
+        assert maxAngle <= 180.0;
         super.particles.add(p1);
         super.particles.add(pivot);
         super.particles.add(p2);
@@ -36,8 +38,33 @@ public class AngleConstraint extends Constraint {
             a += Math.PI * 2.0;
         return a;
     }
+    double smallestAngleBetween(double x1, double y1, double x2, double y2) {
+    	double a = (Math.atan2(y2, x2) - Math.atan2(y1, x1));
+    	while(a < 0.0)
+    		a += Math.PI * 2.0;
+    	while(a > Math.PI)
+    		a -= Math.PI;
+    	return a;
+    }
+
     double ad = 0.0;
+
+    @Override
     protected double satisfy() {
+        if(p1.isRigid() && p2.isRigid())
+            return 0.0;
+        double diff = angleBetween(p1.getX() - pivot.getX(), p1.getY() - pivot.getY(), p2.getX() - pivot.getX(), p2.getY() - pivot.getY());
+    	
+        ad = 0.0;
+        
+        if(diff < minAngle || diff > maxAngle) {
+        	
+        }
+        
+        return 0.0;
+    }
+
+    protected double oldSatisfy() {
         if(p1.isRigid() && p2.isRigid())
             return 0.0;
         double diff = angleBetween(p1.getX() - pivot.getX(), p1.getY() - pivot.getY(), p2.getX() - pivot.getX(), p2.getY() - pivot.getY());

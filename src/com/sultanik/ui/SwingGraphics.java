@@ -115,4 +115,14 @@ public class SwingGraphics implements GraphicsContext {
     public void setColor(Color c) {
         graphics.setColor(c);
     }
+
+	@Override
+	public double getWidth(String text) {
+		return graphics.getFontMetrics().stringWidth(text);
+	}
+
+	@Override
+	public double getFontHeight() {
+		return graphics.getFontMetrics().getHeight();
+	}
 }

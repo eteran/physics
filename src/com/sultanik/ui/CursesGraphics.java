@@ -1,7 +1,7 @@
 package com.sultanik.ui;
 
-import java.awt.*;
-import java.awt.geom.*;
+import java.awt.Color;
+import java.awt.geom.Point2D;
 
 public class CursesGraphics implements GraphicsContext {
     double pixelsPerMeter;
@@ -165,4 +165,14 @@ public class CursesGraphics implements GraphicsContext {
     public void setColor(Color c) {
         jCurses.setColor(c);
     }
+
+	@Override
+	public double getWidth(String text) {
+		return text.length();
+	}
+
+	@Override
+	public double getFontHeight() {
+		return 1;
+	}
 }

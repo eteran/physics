@@ -15,4 +15,6 @@ public interface GraphicsContext {
     public double getHeight();
     public void ensureFocus(double x, double y);
     public void drawArc(double originX, double originY, double radius, double startAngle, double endAngle);
+    public double getWidth(String text);
+    public double getFontHeight();
 }

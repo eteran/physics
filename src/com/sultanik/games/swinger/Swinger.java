@@ -168,10 +168,18 @@ public class Swinger {
         }
     }
 
+    public static class Debugger {
+    	boolean debugMode = false;
+    }
+    
     public static class KeyHandler extends KeyAdapter {
         Grapple grapple;
+        Debugger debugger;
 
-        public KeyHandler(Grapple grapple) { this.grapple = grapple; }
+        public KeyHandler(Grapple grapple, Debugger debugger) { 
+        	this.grapple = grapple;
+        	this.debugger = debugger;
+        }
 
         public void keyPressed(KeyEvent e) {
             synchronized(grapple.getSimulator().getSimulationMutex()) {
@@ -188,7 +196,8 @@ public class Swinger {
                           ||
                           e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     grapple.setAngle(grapple.getAngle() - 3.0);
-                }
+                } else if (e.getKeyChar() == 'd')
+                	debugger.debugMode = !debugger.debugMode;
             }
         }
     }
@@ -198,7 +207,8 @@ public class Swinger {
         Grapple grapple;
         Person person;
         BuildingCluster bc;
-        public Repainter(Simulator sim, Grapple grapple, Person person, BuildingCluster bc) {this.sim = sim;this.grapple = grapple; this.bc = bc; this.person = person;}
+        Debugger debugger;
+        public Repainter(Simulator sim, Grapple grapple, Person person, BuildingCluster bc, Debugger debugger) {this.sim = sim;this.grapple = grapple; this.bc = bc; this.person = person; this.debugger = debugger;}
         public void paint(GraphicsContext sg) {
             synchronized(sim.getSimulationMutex()) {
                 /* draw the buildings first */
@@ -214,15 +224,20 @@ public class Swinger {
 
                 /* draw the grapple second */
                 grapple.paint(sg);
-                for(Constraint c : sim.getConstraints())
-                    c.paint(sg);
+                if(debugger.debugMode)
+                	for(Constraint c : sim.getConstraints())
+                		c.paint(sg);
                 for(Body b : sim.getBodies())
                     if(b != grapple)
                         b.paint(sg);
                 for(Particle p : sim.getParticles())
                     p.paint(sg);
-                for(Force f : sim.getForces())
-                    f.paint(sim, sg);
+                if(debugger.debugMode) {
+                	for(Force f : sim.getForces())
+                		f.paint(sim, sg);
+                	sg.setColor(Color.BLACK);
+                	sg.drawString("DEBUG", sg.getXOffset() + sg.getWidth() - sg.getWidth("DEBUG")/3.0, sg.getYOffset() + sg.getHeight() - 5);
+                }
             }
         }
     }
@@ -284,11 +299,13 @@ public class Swinger {
         Person p = new Person(grapple.getLocation());
         sim.addBody(p);
 
-        ui.addRepaintListener(new Repainter(sim, grapple, p, bc));
+        Debugger debugger = new Debugger();
+        
+        ui.addRepaintListener(new Repainter(sim, grapple, p, bc, debugger));
 
         sim.addConstraint(new DistanceConstraint(p.getRightHand(), grapple.getLocation(), 0.0));
         
-        ui.addKeyListener(new KeyHandler(grapple));
+        ui.addKeyListener(new KeyHandler(grapple, debugger));
 
         ui.setFocusProvider(new Focuser(grapple.getLocation()));
 

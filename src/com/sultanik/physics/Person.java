@@ -88,6 +88,8 @@ public class Person extends BodyAdapter {
         broken = false;
 
         //addConstraint(new AngleConstraint(rightHand, rightElbow, neck, 0.0, Math.PI / 2.0));
+        
+        //addForce(new Drag(rightHand, rightElbow));
     }
     public void setBroken(boolean broken) {
         this.broken = broken;

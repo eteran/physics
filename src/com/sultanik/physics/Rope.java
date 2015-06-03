@@ -3,6 +3,7 @@ package com.sultanik.physics;
 import com.sultanik.ui.GraphicsContext;
 import java.awt.Color;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -66,17 +67,17 @@ public class Rope implements Body {
 
     @Override
     public Collection<Particle> getParticles() {
-        return links;
+        return Collections.unmodifiableCollection(links);
     }
 
     @Override
     public Collection<Constraint> getConstraints() {
-        return constraints;
+        return Collections.unmodifiableCollection(constraints);
     }
 
     @Override
     public Collection<Force> getForces() {
-        return forces;
+        return Collections.unmodifiableCollection(forces);
     }
 
     @Override

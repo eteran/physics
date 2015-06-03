@@ -2,6 +2,7 @@ package com.sultanik.physics;
 
 import com.sultanik.ui.GraphicsContext;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 
 public class Person extends BodyAdapter {
@@ -134,7 +135,7 @@ public class Person extends BodyAdapter {
         if(!broken) {
             return super.getConstraints();
         } else {
-            return brokenConstraints;
+            return Collections.unmodifiableCollection(brokenConstraints);
         }
     }
     @Override

@@ -2,6 +2,7 @@ package com.sultanik.physics;
 
 import com.sultanik.ui.GraphicsContext;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 
 public class BodyAdapter implements Body {
@@ -17,15 +18,15 @@ public class BodyAdapter implements Body {
 
     @Override
     public Collection<Particle> getParticles() {
-        return particles;
+        return Collections.unmodifiableCollection(particles);
     }
     @Override
     public Collection<Constraint> getConstraints() {
-        return constraints;
+        return Collections.unmodifiableCollection(constraints);
     }
     @Override
     public Collection<Force> getForces() {
-        return forces;
+        return Collections.unmodifiableCollection(forces);
     }
     @Override
     public void addParticle(Particle particle) {

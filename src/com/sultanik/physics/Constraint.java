@@ -2,6 +2,7 @@ package com.sultanik.physics;
 
 import com.sultanik.ui.GraphicsContext;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -27,7 +28,7 @@ public abstract class Constraint implements Iterable<Particle> {
         if(body != null) {
             return body.getParticles();
         } else {
-            return particles;
+            return Collections.unmodifiableCollection(particles);
         }
     }
 

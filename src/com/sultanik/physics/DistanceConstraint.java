@@ -1,6 +1,6 @@
 package com.sultanik.physics;
 
-import java.util.*;
+import java.util.HashSet;
 
 public class DistanceConstraint extends Constraint {
     double distance;

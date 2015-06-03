@@ -1,9 +1,10 @@
 package com.sultanik.physics;
 
 import com.sultanik.ui.GraphicsContext;
-
-import java.util.*;
 import java.awt.Color;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 public class Rope implements Body {
     LinkedList<Particle> links;

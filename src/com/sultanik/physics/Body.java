@@ -1,7 +1,6 @@
 package com.sultanik.physics;
 
 import com.sultanik.ui.GraphicsContext;
-
 import java.util.Collection;
 
 public interface Body {

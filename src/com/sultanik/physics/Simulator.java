@@ -1,15 +1,14 @@
 package com.sultanik.physics;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-
 import com.sultanik.ui.FocusProvider;
 import com.sultanik.ui.GraphicsContext;
 import com.sultanik.ui.JCurses;
 import com.sultanik.ui.RepaintListener;
 import com.sultanik.ui.UserInterface;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 public class Simulator {
     /**

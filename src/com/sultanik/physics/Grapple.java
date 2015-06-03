@@ -1,8 +1,8 @@
 package com.sultanik.physics;
 
 import com.sultanik.ui.GraphicsContext;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
 
 public class Grapple extends BodyAdapter implements SimulationListener {
     Particle location;

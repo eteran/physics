@@ -1,10 +1,5 @@
 package com.sultanik.games.swinger;
 
-import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-
 import com.sultanik.physics.BasicParticle;
 import com.sultanik.physics.Body;
 import com.sultanik.physics.Constraint;
@@ -21,6 +16,10 @@ import com.sultanik.ui.GraphicsContext;
 import com.sultanik.ui.RepaintListener;
 import com.sultanik.ui.SwingInterface;
 import com.sultanik.ui.UserInterface;
+import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class Swinger {
     private static class BuildingCluster {

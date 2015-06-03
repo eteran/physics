@@ -1,8 +1,8 @@
 package com.sultanik.physics;
 
 import com.sultanik.ui.GraphicsContext;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
 
 public class BodyAdapter implements Body {
     HashSet<Particle> particles;

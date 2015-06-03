@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.util.LinkedHashSet;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 

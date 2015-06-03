@@ -18,7 +18,7 @@ public class Person extends BodyAdapter {
     HashSet<Particle> brokenParticles;
 
     private class BreakingForce implements Force {
-        public BreakingForce() { }
+        BreakingForce() { }
         @Override
         public void applyForce(Simulator simulator) {
             for(Particle p : getParticles()) {

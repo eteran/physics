@@ -29,7 +29,7 @@ public class Swinger {
         ArrayList<Building> ordered;
         double maxX, minX;
 
-        public BuildingCluster() {
+        BuildingCluster() {
             leftSceneBuilding = null;
             first = null;
             last = null;
@@ -144,11 +144,11 @@ public class Swinger {
         double x, width;
 
         @SuppressWarnings("unused")
-		public Building(double x, double height, double width) {
+		 Building(double x, double height, double width) {
             this(null, x, height, width);
         }
 
-        public Building(Building left, double x, double height, double width) {
+        Building(Building left, double x, double height, double width) {
             this.x = x;
             this.height = height;
             this.width = width;
@@ -176,7 +176,7 @@ public class Swinger {
 
     private static class Focuser implements FocusProvider {
         Particle p;
-		public Focuser(Particle p) {
+		Focuser(Particle p) {
             this.p = p;
         }
         @Override
@@ -228,7 +228,7 @@ public class Swinger {
         Person person;
         BuildingCluster bc;
         Debugger debugger;
-        public Repainter(Simulator sim, Grapple grapple, Person person, BuildingCluster bc, Debugger debugger) {this.sim = sim;this.grapple = grapple; this.bc = bc; this.person = person; this.debugger = debugger;}
+        Repainter(Simulator sim, Grapple grapple, Person person, BuildingCluster bc, Debugger debugger) {this.sim = sim;this.grapple = grapple; this.bc = bc; this.person = person; this.debugger = debugger;}
         @Override
         public void paint(GraphicsContext sg) {
             synchronized(sim.getSimulationMutex()) {

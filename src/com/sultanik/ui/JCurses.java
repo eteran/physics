@@ -111,7 +111,7 @@ public class JCurses implements UserInterface {
     @SuppressWarnings("unused")
 	private static class KeyThread extends Thread {
         JCurses jc;
-        public KeyThread(JCurses jc) {
+        KeyThread(JCurses jc) {
             super();
             this.jc = jc;
             if(readMethod != null) {
@@ -427,7 +427,7 @@ public class JCurses implements UserInterface {
     private static class CharUpdate {
 //        public int row, col;
 //        public char newChar;
-        public CharUpdate(int row, int col, char newChar) {
+        CharUpdate(int row, int col, char newChar) {
 //            this.row = row;
 //            this.col = col;
 //            this.newChar = newChar;
@@ -515,7 +515,7 @@ public class JCurses implements UserInterface {
 
     private static class KeyHandler extends KeyAdapter {
         String s;
-        public KeyHandler(String s) {
+        KeyHandler(String s) {
             this.s = s;
         }
         @Override

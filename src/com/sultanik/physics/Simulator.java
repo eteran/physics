@@ -197,7 +197,7 @@ public class Simulator {
 
     private static class Focuser implements FocusProvider {
         Particle p;
-        public Focuser(Particle p) {
+        Focuser(Particle p) {
             this.p = p;
         }
         @Override
@@ -237,7 +237,7 @@ public class Simulator {
 
     private static class Repainter implements RepaintListener {
         Simulator sim;
-        public Repainter(Simulator sim) {this.sim = sim;}
+        Repainter(Simulator sim) {this.sim = sim;}
         @Override
         public void paint(GraphicsContext sg) {
             synchronized(sim.getSimulationMutex()) {

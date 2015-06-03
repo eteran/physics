@@ -237,7 +237,7 @@ public class JCurses implements UserInterface {
         int val = 80;
         try {
             String size = stty ("size");
-            if(size.length() != 0 && size.indexOf(" ") != -1) {
+            if(size.length() != 0 && size.contains(" ")) {
                 val = Integer.parseInt(size.substring(size.indexOf(" ") + 1));
             }
         } catch (IOException | InterruptedException | NumberFormatException e) { }
@@ -254,7 +254,7 @@ public class JCurses implements UserInterface {
         int val = 24;
         try {
             String size = stty ("size");
-            if(size.length() != 0 && size.indexOf(" ") != -1) {
+            if(size.length() != 0 && size.contains(" ")) {
                 val = Integer.parseInt(size.substring(0, size.indexOf(" ")));
             }
         } catch (IOException | InterruptedException | NumberFormatException e) { }
@@ -343,7 +343,7 @@ public class JCurses implements UserInterface {
             // sanity check
             if(ttyConfig.length () == 0
                ||
-               (ttyConfig.indexOf ("=") == -1 && ttyConfig.indexOf (":") == -1)) {
+               (!ttyConfig.contains("=") && !ttyConfig.contains(":"))) {
                 throw new IOException ("Unrecognized stty code: " + ttyConfig);
             }
 

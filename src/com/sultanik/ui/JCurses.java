@@ -326,7 +326,7 @@ public final class JCurses implements UserInterface {
             return null;
         }
         
-        String fieldName = "BLACK";        
+        String fieldName;        
         if (c == Color.RED) {
             fieldName = "RED";
         } else if (c == Color.WHITE) {
@@ -344,6 +344,7 @@ public final class JCurses implements UserInterface {
         } else {
             fieldName = "BLACK";
         }
+        
         try {
             cc = charColor.getConstructor(short.class, short.class).newInstance(charColor.getField("WHITE").getShort(null), charColor.getField(fieldName).getShort(null));
             charColors.put(c, cc);

@@ -32,14 +32,17 @@ public class SwingInterface extends JPanel implements UserInterface {
         requestFocusInWindow();
     }
 
+        @Override
     public void addRepaintListener(RepaintListener listener) {
         listeners.add(listener);
     }
 
+        @Override
     public void removeRepaintListener(RepaintListener listener) {
         listeners.remove(listener);
     }
 
+        @Override
     public void setFocusProvider(FocusProvider focusProvider) {
         this.focusProvider = focusProvider;
     }
@@ -52,6 +55,7 @@ public class SwingInterface extends JPanel implements UserInterface {
         sg.ensureFocus(x, y);
     }
 
+        @Override
     public void paint(Graphics graphics) {
         Graphics2D g2d = (Graphics2D)graphics;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,

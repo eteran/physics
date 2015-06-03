@@ -29,6 +29,7 @@ public abstract class Constraint implements Iterable<Particle> {
             return particles;
     }
 
+    @Override
     public Iterator<Particle> iterator() {
         return getParticles().iterator();
     }

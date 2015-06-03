@@ -163,6 +163,7 @@ public class Swinger {
 		public Focuser(Particle p) {
             this.p = p;
         }
+        @Override
         public java.awt.geom.Point2D getFocalPoint() {
             return new java.awt.geom.Point2D.Double(p.getX(), p.getY());
         }
@@ -181,6 +182,7 @@ public class Swinger {
         	this.debugger = debugger;
         }
 
+        @Override
         public void keyPressed(KeyEvent e) {
             synchronized(grapple.getSimulator().getSimulationMutex()) {
                 if(e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -209,6 +211,7 @@ public class Swinger {
         BuildingCluster bc;
         Debugger debugger;
         public Repainter(Simulator sim, Grapple grapple, Person person, BuildingCluster bc, Debugger debugger) {this.sim = sim;this.grapple = grapple; this.bc = bc; this.person = person; this.debugger = debugger;}
+        @Override
         public void paint(GraphicsContext sg) {
             synchronized(sim.getSimulationMutex()) {
                 /* draw the buildings first */

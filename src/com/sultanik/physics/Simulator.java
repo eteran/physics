@@ -192,6 +192,7 @@ public class Simulator {
         public Focuser(Particle p) {
             this.p = p;
         }
+        @Override
         public java.awt.geom.Point2D getFocalPoint() {
             return new java.awt.geom.Point2D.Double(p.getX(), p.getY());
         }
@@ -202,6 +203,7 @@ public class Simulator {
 
         public KeyHandler(Grapple grapple) { this.grapple = grapple; }
 
+        @Override
         public void keyPressed(KeyEvent e) {
             synchronized(grapple.simulator.getSimulationMutex()) {
                 if(e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -227,6 +229,7 @@ public class Simulator {
     private static class Repainter implements RepaintListener {
         Simulator sim;
         public Repainter(Simulator sim) {this.sim = sim;}
+        @Override
         public void paint(GraphicsContext sg) {
             synchronized(sim.getSimulationMutex()) {
                 for(Constraint c : sim.getConstraints())

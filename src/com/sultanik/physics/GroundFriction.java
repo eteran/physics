@@ -4,6 +4,7 @@ import com.sultanik.ui.GraphicsContext;
 
 public class GroundFriction implements Force {
     public GroundFriction() { }
+    @Override
     public void applyForce(Simulator simulator) {
         for(Particle particle : simulator.getParticles()) {
             if(particle.getY() == 0.0) {
@@ -12,6 +13,7 @@ public class GroundFriction implements Force {
             }
         }
     }
+    @Override
     public void paint(Simulator simulator, GraphicsContext graphicsContext) {
         graphicsContext.setColor(java.awt.Color.GREEN);
         graphicsContext.setLineThickness(1.0);

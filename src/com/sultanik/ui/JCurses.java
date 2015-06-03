@@ -56,21 +56,27 @@ public class JCurses implements UserInterface {
                                                         * is
                                                         * performed */
 
+    @Override
     public void setFocusProvider(FocusProvider focusProvider) {
         this.focusProvider = focusProvider;
     }
+    @Override
     public void addKeyListener(KeyListener listener) {
         keyListeners.add(listener);
     }
+    @Override
     public void removeKeyListener(KeyListener listener) {
         keyListeners.remove(listener);
     }
+    @Override
     public void addRepaintListener(RepaintListener listener) {
         listeners.add(listener);
     }
+    @Override
     public void removeRepaintListener(RepaintListener listener) {
         listeners.remove(listener);
     }
+    @Override
     public void repaint() {
         //clear();
         height = getRealHeight();
@@ -107,6 +113,7 @@ public class JCurses implements UserInterface {
             if(readMethod != null)
                 start();
         }
+        @Override
         public void run() {
             for(;;) {
                 try {
@@ -305,6 +312,7 @@ public class JCurses implements UserInterface {
             try {
                 toolkit.getMethod("init").invoke(null);
                 Runtime.getRuntime ().addShutdownHook(new Thread () {
+                        @Override
                         public void start () {
                             try {
                                 toolkit.getMethod("shutdown").invoke(null);
@@ -339,6 +347,7 @@ public class JCurses implements UserInterface {
             // at exit, restore the original tty configuration (for JDK 1.3+)
             try {
                 Runtime.getRuntime ().addShutdownHook(new Thread () {
+                        @Override
                         public void start () {
                             try {
                                 stty(ttyConfig);
@@ -487,6 +496,7 @@ public class JCurses implements UserInterface {
         public KeyHandler(String s) {
             this.s = s;
         }
+        @Override
         public void keyPressed(KeyEvent e) {
             s = s + e.getKeyChar();
         }

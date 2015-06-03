@@ -24,6 +24,7 @@ public class GarbageCollector implements SimulationListener {
         simulator.removeBody(body);
         simulator.removeListener(this);
     }
+    @Override
     public void handleIteration(double newTime) {
         /* see if we need to do a garbage collection */
         if(newTime - lastCollectionTime < interval)

@@ -24,6 +24,7 @@ public class DistanceConstraint extends Constraint {
     public Particle getP2() {
         return p2;
     }
+    @Override
     protected double satisfy() {
         double deltaX = p2.getX() - p1.getX();
         double deltaY = p2.getY() - p1.getY();

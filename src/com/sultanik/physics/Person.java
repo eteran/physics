@@ -18,6 +18,7 @@ public class Person extends BodyAdapter {
 
     private class BreakingForce implements Force {
         public BreakingForce() { }
+        @Override
         public void applyForce(Simulator simulator) {
             for(Particle p : getParticles()) {
                 if(p.getY() <= 0.0) {
@@ -28,6 +29,7 @@ public class Person extends BodyAdapter {
                 }
             }
         }
+        @Override
         public void paint(Simulator simulator, GraphicsContext graphicsContext) { }
     }
 
@@ -127,12 +129,14 @@ public class Person extends BodyAdapter {
         }
     }
     public boolean isBroken() { return broken; }
+    @Override
     public Collection<Constraint> getConstraints() {
         if(!broken)
             return super.getConstraints();
         else
             return brokenConstraints;
     }
+    @Override
     public Collection<Particle> getParticles() {
         if(!broken) {
             return super.getParticles();
@@ -145,6 +149,7 @@ public class Person extends BodyAdapter {
     public Particle getRightHand() {
         return rightHand;
     }
+    @Override
     public void paint(GraphicsContext graphicsContext) {
         super.paint(graphicsContext);
         graphicsContext.setColor(java.awt.Color.GREEN);

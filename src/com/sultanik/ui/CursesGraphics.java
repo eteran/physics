@@ -24,6 +24,7 @@ public class CursesGraphics implements GraphicsContext {
         lineThickness = 1.0;
     }
 
+    @Override
     public void ensureFocus(double x, double y) {
         synchronized(focusMutex) {
             nextXOffset = x - getWidth() / 2.0;
@@ -35,6 +36,7 @@ public class CursesGraphics implements GraphicsContext {
         }
     }
 
+    @Override
     public double getLineThickness() {
         return lineThickness;
     }
@@ -55,22 +57,30 @@ public class CursesGraphics implements GraphicsContext {
         this.yOffset = yOffset;
     }
 
+    @Override
     public double getXOffset() { return xOffset; }
+    @Override
     public double getYOffset() { return yOffset; }
+    @Override
     public double getWidth() { return (double)width / pixelsPerMeter; }
+    @Override
     public double getHeight() { return (double)height / pixelsPerMeter; }
 
+    @Override
     public void drawArc(double originX, double originY, double radius, double startAngle, double endAngle) {
     }
 
+    @Override
     public void clear() {
         jCurses.clear();
     }
 
+    @Override
     public void setLineThickness(double pixels) {
         lineThickness = pixels;
     }
 
+    @Override
     public void drawLine(double lx1, double ly1, double lx2, double ly2) {
         int x1 = (int)((lx1 - xOffset) * pixelsPerMeter + 0.5);
         int y1 = jCurses.getHeight() - (int)((ly1 - yOffset) * pixelsPerMeter + 0.5);
@@ -150,18 +160,22 @@ public class CursesGraphics implements GraphicsContext {
             jCurses.drawString(lineChar, lastX, lastY);
     }
 
+    @Override
     public void drawBezier(Point2D... knots) {
         for(int i=0; i<knots.length - 1; i++)
             drawLine(knots[i].getX(), knots[i].getY(), knots[i+1].getX(), knots[i+1].getY());
     }
 
+    @Override
     public void fillOval(double x, double y, double w, double h) {
     }
 
+    @Override
     public void drawString(String text, double x, double y) {
         jCurses.drawString(text, (int)((x - xOffset) * pixelsPerMeter + 0.5), jCurses.getHeight() - (int)((y - yOffset) * pixelsPerMeter + 0.5));
     }
 
+    @Override
     public void setColor(Color c) {
         jCurses.setColor(c);
     }

@@ -104,12 +104,14 @@ public class Grapple extends BodyAdapter implements SimulationListener {
             return rope.getLinks().getLast();
     }
 
+    @Override
     public Collection<Particle> getParticles() {
         HashSet<Particle> particles = new HashSet<>(super.getParticles());
         particles.add(location);
         return particles;
     }
 
+    @Override
     public Collection<Constraint> getConstraints() {
         HashSet<Constraint> constraints = new HashSet<>(super.getConstraints());
         if(grappled) {
@@ -119,6 +121,7 @@ public class Grapple extends BodyAdapter implements SimulationListener {
         return constraints;
     }
 
+    @Override
     public void handleIteration(double newTime) {
         if(rope == null || grappled)
             return;
@@ -140,6 +143,7 @@ public class Grapple extends BodyAdapter implements SimulationListener {
             detatchRope();
     }
 
+    @Override
     public void paint(GraphicsContext graphicsContext) {
         graphicsContext.setColor(java.awt.Color.BLUE);
         graphicsContext.setLineThickness(0.5);

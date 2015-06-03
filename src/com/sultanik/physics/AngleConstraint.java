@@ -125,6 +125,7 @@ public class AngleConstraint extends Constraint {
         }
         return 0.0;
     }
+    @Override
     public void paint(com.sultanik.ui.GraphicsContext graphicsContext) {
         if(ad != 0.0) {
             graphicsContext.setColor(java.awt.Color.RED);

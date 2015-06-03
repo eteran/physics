@@ -26,21 +26,27 @@ public class Rope implements Body {
         this.color = color;
     }
 
+    @Override
     public void addParticle(Particle particle) {
         links.add(particle);
     }
+    @Override
     public void removeParticle(Particle particle) {
         links.remove(particle);
     }
+    @Override
     public void addConstraint(Constraint constraint) {
         constraints.add(constraint);
     }
+    @Override
     public void removeConstraint(Constraint constraint) {
         constraints.remove(constraint);
     }
+    @Override
     public void addForce(Force force) {
         forces.add(force);
     }
+    @Override
     public void removeForce(Force force) {
         forces.remove(force);
     }
@@ -57,18 +63,22 @@ public class Rope implements Body {
         return links;
     }
 
+    @Override
     public Collection<Particle> getParticles() {
         return links;
     }
 
+    @Override
     public Collection<Constraint> getConstraints() {
         return constraints;
     }
 
+    @Override
     public Collection<Force> getForces() {
         return forces;
     }
 
+    @Override
     public void paint(GraphicsContext graphicsContext) {
         if(links.size() <= 0)
             return;

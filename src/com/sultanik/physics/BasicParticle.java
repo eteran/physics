@@ -92,28 +92,49 @@ public class BasicParticle implements Particle {
     public BasicParticle rotate(double angle, Particle center, boolean preserveVelocity) {
         return this.subtract(center).rotate(angle, true).add(center);
     }
+    @Override
     public double getVelocity() {
         return Math.hypot(getX() - getPreviousX(), getY() - getPreviousY());
     }
+    @Override
     public double getX() { return x; }
+    @Override
     public double getY() { return y; }
+    @Override
     public void setX(double x) { this.x = x; }
+    @Override
     public void setY(double y) { this.y = y; }
+    @Override
     public double getPreviousX() { return prevX; }
+    @Override
     public double getPreviousY() { return prevY; }
+    @Override
     public void setPreviousX(double x) { prevX = x; }
+    @Override
     public void setPreviousY(double y) { prevY = y; }
+    @Override
     public double getAccelX() { return accelX; }
+    @Override
     public double getAccelY() { return accelY; }
+    @Override
     public void setAccelX(double x) { accelX = x; }
+    @Override
     public void setAccelY(double y) { accelY = y; }
+    @Override
     public boolean isRigid() { return rigid || fixed; };
+    @Override
     public void setRigid(boolean rigid) { this.rigid = rigid;}
+    @Override
     public boolean isFixed() { return fixed; }
+    @Override
     public void setFixed(boolean fixed) { this.fixed = fixed; }
+    @Override
     public double getDensity() { return density; }
+    @Override
     public void setDensity(double density) { this.density = density; }
+    @Override
     public void paint(GraphicsContext graphicsContext) { }
+    @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
     }

@@ -18,7 +18,7 @@ public class SwingInterface extends JPanel implements UserInterface {
 
     public SwingInterface(String title) {
         super();
-        listeners = new LinkedHashSet<RepaintListener>();
+        listeners = new LinkedHashSet<>();
         JFrame frame = new JFrame(title);
         setPreferredSize(new Dimension(640,480));
         focusProvider = null;

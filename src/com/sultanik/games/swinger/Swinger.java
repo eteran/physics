@@ -34,7 +34,7 @@ public class Swinger {
             leftSceneBuilding = null;
             first = null;
             last = null;
-            ordered = new ArrayList<Building>();
+            ordered = new ArrayList<>();
             minX = Double.MAX_VALUE;
             maxX = Double.MIN_VALUE;
         }

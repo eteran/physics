@@ -14,7 +14,7 @@ public abstract class Constraint implements Iterable<Particle> {
     }
 
     public Constraint(Collection<Particle> particles) {
-        this.particles = new HashSet<Particle>(particles);
+        this.particles = new HashSet<>(particles);
         body = null;
     }
 

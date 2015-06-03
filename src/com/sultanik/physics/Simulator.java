@@ -33,10 +33,10 @@ public class Simulator {
     private static final double	CONSTRAINT_SATISFICATION_THRESHOLD	= 0.001;
 
     public Simulator(double timeStep) {
-        listeners = new LinkedHashSet<SimulationListener>();
-        bodies = new HashSet<Body>();
-        forces = new HashSet<Force>();
-        constraints = new HashSet<Constraint>();
+        listeners = new LinkedHashSet<>();
+        bodies = new HashSet<>();
+        forces = new HashSet<>();
+        constraints = new HashSet<>();
         this.timeStep = timeStep;
         t = 0.0;
     }
@@ -114,14 +114,14 @@ public class Simulator {
     }
 
     public HashSet<Particle> getParticles() {
-        HashSet<Particle> particles = new HashSet<Particle>();
+        HashSet<Particle> particles = new HashSet<>();
         for(Body body : bodies)
             particles.addAll(body.getParticles());
         return particles;
     }
 
     public HashSet<Constraint> getConstraints() {
-        HashSet<Constraint> constraints = new HashSet<Constraint>();
+        HashSet<Constraint> constraints = new HashSet<>();
         for(Body body : bodies)
             constraints.addAll(body.getConstraints());
         constraints.addAll(this.constraints);
@@ -134,7 +134,7 @@ public class Simulator {
         }
     }
     public HashSet<Force> getForces() { 
-        HashSet<Force> allForces = new HashSet<Force>(forces);
+        HashSet<Force> allForces = new HashSet<>(forces);
         for(Body b : bodies)
             allForces.addAll(b.getForces());
         return allForces;
@@ -156,7 +156,7 @@ public class Simulator {
         }
 
         synchronized(listeners) {
-            LinkedHashSet<SimulationListener> l = new LinkedHashSet<SimulationListener>(listeners);
+            LinkedHashSet<SimulationListener> l = new LinkedHashSet<>(listeners);
             /* we need to iterate over l as opposed to listeners just
              * in case one of the listeners removes itself from the
              * listeners during this iteration (which would otherwise

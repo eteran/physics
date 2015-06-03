@@ -12,9 +12,9 @@ public class Rope implements Body {
     Color color;
 
     public Rope(Particle p1, Particle p2) {
-        links = new LinkedList<Particle>();
-        constraints = new HashSet<Constraint>();
-        forces = new HashSet<Force>();
+        links = new LinkedList<>();
+        constraints = new HashSet<>();
+        forces = new HashSet<>();
         links.addFirst(p2);
         links.addFirst(p1);
         constraints.add(new DistanceConstraint(p1, p2, Math.hypot(p2.getX() - p1.getX(), p2.getY() - p1.getY())));

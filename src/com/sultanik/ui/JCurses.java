@@ -28,7 +28,7 @@ public class JCurses implements UserInterface {
     static Class<?> toolkit = null, charColor = null, inputChar = null;
     static Method clearMethod = null, heightMethod = null, widthMethod = null, printMethod = null, readMethod = null;
     Color color;
-    static Hashtable<Color,Object> charColors = new Hashtable<Color,Object>();
+    static Hashtable<Color,Object> charColors = new Hashtable<>();
 
     static {
         try {
@@ -140,8 +140,8 @@ public class JCurses implements UserInterface {
     }
 
     public JCurses(PrintStream out) {
-        listeners = new LinkedHashSet<RepaintListener>();
-        keyListeners = new LinkedHashSet<KeyListener>();
+        listeners = new LinkedHashSet<>();
+        keyListeners = new LinkedHashSet<>();
         try {
             initializeTerminal();
         } catch(Exception e) { }
@@ -416,7 +416,7 @@ public class JCurses implements UserInterface {
     }
 
     public synchronized void refresh() {
-        LinkedList<CharUpdate> newChars = new LinkedList<CharUpdate>();
+        LinkedList<CharUpdate> newChars = new LinkedList<>();
 
         height = getRealHeight();
         width = getRealWidth();

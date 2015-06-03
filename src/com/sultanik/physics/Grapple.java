@@ -105,13 +105,13 @@ public class Grapple extends BodyAdapter implements SimulationListener {
     }
 
     public Collection<Particle> getParticles() {
-        HashSet<Particle> particles = new HashSet<Particle>(super.getParticles());
+        HashSet<Particle> particles = new HashSet<>(super.getParticles());
         particles.add(location);
         return particles;
     }
 
     public Collection<Constraint> getConstraints() {
-        HashSet<Constraint> constraints = new HashSet<Constraint>(super.getConstraints());
+        HashSet<Constraint> constraints = new HashSet<>(super.getConstraints());
         if(grappled) {
             DistanceConstraint dc = new DistanceConstraint(location, rope.getLinks().getFirst(), 0.0);
             constraints.add(dc);

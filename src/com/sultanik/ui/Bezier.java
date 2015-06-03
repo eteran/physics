@@ -47,7 +47,7 @@ public class Bezier implements Shape {
             throw new IllegalArgumentException("Error: a bezier curve must have at least two knots/control points!");
         } else if(n == 2) {
             /* we can just draw a straight line! */
-            lines = new LinkedList<Line2D>();
+            lines = new LinkedList<>();
             lines.add(new Line2D.Double(knots[0].getX(), knots[0].getY(), knots[1].getX(), knots[1].getY()));
             path.reset();
             path.moveTo((float)knots[0].getX(), (float)knots[0].getY());
@@ -84,7 +84,7 @@ public class Bezier implements Shape {
             t += .04;
         }
         findCPoints();
-        lines = new LinkedList<Line2D>();
+        lines = new LinkedList<>();
         calculateLines();
         arrowHead = null;
     }

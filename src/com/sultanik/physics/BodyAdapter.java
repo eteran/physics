@@ -10,9 +10,9 @@ public class BodyAdapter implements Body {
     HashSet<Force> forces;
 
     public BodyAdapter() {
-        particles = new HashSet<Particle>();
-        constraints = new HashSet<Constraint>();
-        forces = new HashSet<Force>();
+        particles = new HashSet<>();
+        constraints = new HashSet<>();
+        forces = new HashSet<>();
     }
 
     public Collection<Particle> getParticles() {

@@ -94,8 +94,8 @@ public class Person extends BodyAdapter {
     public void setBroken(boolean broken) {
         this.broken = broken;
         if(broken == true) {
-            brokenConstraints = new HashSet<Constraint>();
-            brokenParticles = new HashSet<Particle>();
+            brokenConstraints = new HashSet<>();
+            brokenParticles = new HashSet<>();
             BasicParticle neck2 = new BasicParticle(neck);
             brokenParticles.add(neck2);
             brokenConstraints.add(new DistanceConstraint(neck2, head, neckLength));
@@ -137,7 +137,7 @@ public class Person extends BodyAdapter {
         if(!broken) {
             return super.getParticles();
         } else {
-            HashSet<Particle> p = new HashSet<Particle>(super.getParticles());
+            HashSet<Particle> p = new HashSet<>(super.getParticles());
             p.addAll(brokenParticles);
             return p;
         }

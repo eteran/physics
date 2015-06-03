@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
@@ -40,7 +41,7 @@ public class JCurses implements UserInterface {
             printMethod = toolkit.getMethod("printString", String.class, int.class, int.class, charColor);
             readMethod = toolkit.getMethod("readCharacter");
             inputChar = Class.forName("jcurses.system.InputChar");
-        } catch(Exception e) {
+        } catch(ClassNotFoundException | NoSuchMethodException | SecurityException e) {
             e.printStackTrace();
         }
     }
@@ -129,12 +130,12 @@ public class JCurses implements UserInterface {
                         Method m = inputChar.getMethod("getCharacter");
                         c = (Character)m.invoke(ic);
                         hasCharacter = true;
-                    } catch(Exception e) { }
+                    } catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { }
                     if(!hasCharacter) {
                         try {
                             Method m = inputChar.getMethod("getCode");
                             code = (Integer)m.invoke(ic);
-                        } catch(Exception e) {
+                        } catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                             e.printStackTrace();
                         }
                     }
@@ -147,7 +148,7 @@ public class JCurses implements UserInterface {
                     for(KeyListener l : jc.keyListeners) {
                         l.keyPressed(e);
                     }
-                } catch(Exception e) { e.printStackTrace(); }
+                } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
             }
         }
     }
@@ -157,7 +158,7 @@ public class JCurses implements UserInterface {
         keyListeners = new LinkedHashSet<>();
         try {
             initializeTerminal();
-        } catch(Exception e) { }
+        } catch(IOException | InterruptedException e) { }
         color = Color.BLACK;
         this.out = out;
         height = getRealHeight();
@@ -230,7 +231,7 @@ public class JCurses implements UserInterface {
         if(widthMethod != null) {
             try { 
                 return (Integer)widthMethod.invoke(null);
-            } catch(Exception e) {}
+            } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
         }
         //return Integer.parseInt(System.getenv("COLS"));
         int val = 80;
@@ -239,14 +240,14 @@ public class JCurses implements UserInterface {
             if(size.length() != 0 && size.indexOf(" ") != -1) {
                 val = Integer.parseInt(size.substring(size.indexOf(" ") + 1));
             }
-        } catch (Exception e) { }
+        } catch (IOException | InterruptedException | NumberFormatException e) { }
         return val;
     }
     private static int getRealHeight() {
         if(heightMethod != null) {
             try {
                 return (Integer)heightMethod.invoke(null);
-            } catch(Exception e) {}
+            } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
         }
         //System.out.println(System.getenv());
         //return Integer.parseInt(System.getenv("LINES"));
@@ -256,7 +257,7 @@ public class JCurses implements UserInterface {
             if(size.length() != 0 && size.indexOf(" ") != -1) {
                 val = Integer.parseInt(size.substring(0, size.indexOf(" ")));
             }
-        } catch (Exception e) { }
+        } catch (IOException | InterruptedException | NumberFormatException e) { }
         return val;
     }
     public void clear() {
@@ -276,7 +277,7 @@ public class JCurses implements UserInterface {
         if(clearMethod != null) {
             try {
                 clearMethod.invoke(null, getCharColor(Color.WHITE));
-            } catch(Exception e) { }
+            } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { }
             return;
         } 
         //out.print("\033[2J");
@@ -312,7 +313,7 @@ public class JCurses implements UserInterface {
         try {
             cc = charColor.getConstructor(short.class, short.class).newInstance(charColor.getField("WHITE").getShort(null), charColor.getField(fieldName).getShort(null));
             charColors.put(c, cc);
-        } catch(Exception e) {
+        } catch(NoSuchMethodException | SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return cc;
@@ -327,12 +328,12 @@ public class JCurses implements UserInterface {
                         public void start () {
                             try {
                                 toolkit.getMethod("shutdown").invoke(null);
-                            } catch(Exception e) { 
+                            } catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { 
                                 e.printStackTrace();
                             }
                         }
                     });
-            } catch(Exception e) {
+            } catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         } else {
@@ -364,7 +365,7 @@ public class JCurses implements UserInterface {
                                 stty(ttyConfig);
                                 /* show the cursor */
                                 out.print("\033[?25h");                            
-                            } catch(Exception e) { }
+                            } catch(IOException | InterruptedException e) { }
                         }
                     });
             } catch(AbstractMethodError ame) { }
@@ -374,7 +375,7 @@ public class JCurses implements UserInterface {
     void drawString(String text, int x, int y) {
         try {
             printMethod.invoke(null, text, x, y, getCharColor(color));
-        } catch(Exception e) { e.printStackTrace(); }
+        } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
     }
 
     public void print(String text, int x, int y) {
@@ -489,7 +490,7 @@ public class JCurses implements UserInterface {
                     if(y < buffer.length && buffer[y] != null) {
                         try {
                             printMethod.invoke(null, buffer[y].toString(), 0, y, getCharColor(color));
-                        } catch(Exception e) { e.printStackTrace(); }
+                        } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
                     }
                 } else {
                     for(int x = 0; x < getWidth(); x++) {

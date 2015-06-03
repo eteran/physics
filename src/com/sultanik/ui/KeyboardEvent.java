@@ -36,7 +36,7 @@ public class KeyboardEvent extends KeyEvent {
     static int getField(String name) {
         try {
             return JCurses.inputChar.getField(name).getInt(null);
-        } catch(Exception e) {
+        } catch(NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
             System.exit(0);
             return 0;
         }

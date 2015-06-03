@@ -9,11 +9,14 @@ public class SwingGraphics implements GraphicsContext {
 
     Graphics2D graphics;
     double pixelsPerMeter;
-    int width, height;
-    double nextXOffset, nextYOffset;
-    double xOffset, yOffset;
+    int width;
+    int height;
+    double nextXOffset;
+    double nextYOffset;
+    double xOffset;
+    double yOffset;
     double lineThickness;
-    Object focusMutex = new Object();
+    final Object focusMutex = new Object();
 
     public SwingGraphics(Graphics2D graphics, double pixelsPerMeter, int width, int height, double xOffset, double yOffset) {
         this.graphics = graphics;

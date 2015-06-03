@@ -155,7 +155,7 @@ public class CursesGraphics implements GraphicsContext {
             // next
             if (E > 0) {
                 E += TwoDyTwoDx; //E += 2*Dy - 2*Dx;
-                y = y + ystep;
+                y += ystep;
             } else {
                 E += TwoDy; //E += 2*Dy;
             }

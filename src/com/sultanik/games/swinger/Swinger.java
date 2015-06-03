@@ -150,7 +150,6 @@ public class Swinger {
         Building left, right;
         double x, width;
 
-        @SuppressWarnings("unused")
         Building(double x, double height, double width) {
             this(null, x, height, width);
         }
@@ -166,12 +165,10 @@ public class Swinger {
             right = null;
         }
 
-        @SuppressWarnings("unused")
         public Building getLeft() {
             return left;
         }
 
-        @SuppressWarnings("unused")
         public Building getRight() {
             return right;
         }

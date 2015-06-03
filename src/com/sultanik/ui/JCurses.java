@@ -520,7 +520,7 @@ public class JCurses implements UserInterface {
         }
         @Override
         public void keyPressed(KeyEvent e) {
-            s = s + e.getKeyChar();
+            s += e.getKeyChar();
         }
         public String getString() { return s; }
     }

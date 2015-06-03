@@ -10,9 +10,11 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class JCurses implements UserInterface {
 
@@ -30,7 +32,7 @@ public class JCurses implements UserInterface {
     static Class<?> toolkit = null, charColor = null, inputChar = null;
     static Method clearMethod = null, heightMethod = null, widthMethod = null, printMethod = null, readMethod = null;
     Color color;
-    static Hashtable<Color, Object> charColors = new Hashtable<>();
+    static Map<Color, Object> charColors = new HashMap<>();
 
     static {
         try {

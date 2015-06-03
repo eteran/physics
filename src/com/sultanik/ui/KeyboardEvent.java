@@ -2,13 +2,14 @@ package com.sultanik.ui;
 
 import java.awt.Canvas;
 import java.awt.event.KeyEvent;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KeyboardEvent extends KeyEvent {
 
     private static final long serialVersionUID = 1L;
     static int id = 0;
-    static Hashtable<Integer, Integer> keyMap = new Hashtable<>();
+    static Map<Integer, Integer> keyMap = new HashMap<>();
     static int KEY_BACKSPACE = getField("KEY_BACKSPACE");
     static int KEY_DC = getField("KEY_DC");
     static int KEY_DOWN = getField("KEY_DOWN");

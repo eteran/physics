@@ -10,7 +10,7 @@ public class CursesGraphics implements GraphicsContext {
     double nextXOffset, nextYOffset;
     double xOffset, yOffset;
     double lineThickness;
-    Object focusMutex = new Object();
+    final Object focusMutex = new Object();
     JCurses jCurses;
 
     public CursesGraphics(JCurses jCurses, double pixelsPerMeter, int width, int height, double xOffset, double yOffset) {

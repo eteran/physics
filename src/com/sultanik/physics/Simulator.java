@@ -21,10 +21,10 @@ public class Simulator {
      */
     public static final String REV_DATE = "2009-08-10";
 
-    LinkedHashSet<SimulationListener> listeners;
-    HashSet<Body> bodies;
-    HashSet<Force> forces;
-    HashSet<Constraint> constraints;
+    final LinkedHashSet<SimulationListener> listeners;
+    final HashSet<Body> bodies;
+    final HashSet<Force> forces;
+    final HashSet<Constraint> constraints;
     double timeStep;
     double t;
     Object simulationMutex = new Object();

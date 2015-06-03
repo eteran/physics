@@ -14,7 +14,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 
-public class Bezier implements Shape {
+public final class Bezier implements Shape {
 
     Point2D[] knots;
     int n;

@@ -28,8 +28,14 @@ public class JCurses implements UserInterface {
     LinkedHashSet<KeyListener> keyListeners;
     CursesGraphics cg;
 
-    static Class<?> toolkit = null, charColor = null, inputChar = null;
-    static Method clearMethod = null, heightMethod = null, widthMethod = null, printMethod = null, readMethod = null;
+    static Class<?> toolkit = null;
+    static Class<?> charColor = null;
+    static Class<?> inputChar = null;
+    static Method clearMethod = null;
+    static Method heightMethod = null;
+    static Method widthMethod = null;
+    static Method printMethod = null;
+    static Method readMethod = null;
     Color color;
     static Map<Color, Object> charColors = new HashMap<>();
 
@@ -45,6 +51,7 @@ public class JCurses implements UserInterface {
             inputChar = Class.forName("jcurses.system.InputChar");
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException e) {
             e.printStackTrace();
+            System.exit(-1);
         }
     }
 
@@ -314,10 +321,12 @@ public class JCurses implements UserInterface {
         if (cc != null) {
             return cc;
         }
+        
         if (c == null) {
             return null;
         }
-        String fieldName = "BLACK";
+        
+        String fieldName = "BLACK";        
         if (c == Color.RED) {
             fieldName = "RED";
         } else if (c == Color.WHITE) {

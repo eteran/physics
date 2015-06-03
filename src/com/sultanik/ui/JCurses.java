@@ -238,7 +238,7 @@ public class JCurses implements UserInterface {
         try {
             String size = stty ("size");
             if(size.length() != 0 && size.contains(" ")) {
-                val = Integer.parseInt(size.substring(size.indexOf(" ") + 1));
+                val = Integer.parseInt(size.substring(size.indexOf(' ') + 1));
             }
         } catch (IOException | InterruptedException | NumberFormatException e) { }
         return val;
@@ -255,7 +255,7 @@ public class JCurses implements UserInterface {
         try {
             String size = stty ("size");
             if(size.length() != 0 && size.contains(" ")) {
-                val = Integer.parseInt(size.substring(0, size.indexOf(" ")));
+                val = Integer.parseInt(size.substring(0, size.indexOf(' ')));
             }
         } catch (IOException | InterruptedException | NumberFormatException e) { }
         return val;

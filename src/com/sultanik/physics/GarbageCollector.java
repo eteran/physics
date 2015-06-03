@@ -64,7 +64,6 @@ public class GarbageCollector implements SimulationListener {
             }
             if(offscreen) {
                 cleanup();
-                return;
             }
         }
     }

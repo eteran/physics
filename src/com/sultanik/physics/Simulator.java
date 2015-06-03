@@ -27,7 +27,7 @@ public class Simulator {
     final HashSet<Constraint> constraints;
     double timeStep;
     double t;
-    Object simulationMutex = new Object();
+    final Object simulationMutex = new Object();
 
     private static final int CONSTRAINT_SATISFICATION_ITERATIONS = 100;
     private static final double CONSTRAINT_SATISFICATION_THRESHOLD = 0.001;

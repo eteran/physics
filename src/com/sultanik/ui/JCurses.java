@@ -89,15 +89,18 @@ public class JCurses implements UserInterface {
             java.awt.geom.Point2D p = focusProvider.getFocalPoint();
             cg.xOffset = p.getX() - cg.getWidth() / 2.0;
             cg.yOffset = p.getY() - cg.getHeight() / 2.0;
-            if(cg.xOffset < 0.0)
+            if(cg.xOffset < 0.0) {
                 cg.xOffset = 0.0;
-            if(cg.yOffset < 0.0)
+            }
+            if(cg.yOffset < 0.0) {
                 cg.yOffset = 0.0;
+            }
         }
 
-        for(RepaintListener listener : listeners)
+        for(RepaintListener listener : listeners) {
             listener.paint(cg);
-        //refresh();
+            //refresh();
+        }
     }
 
     public JCurses() {
@@ -110,8 +113,9 @@ public class JCurses implements UserInterface {
         public KeyThread(JCurses jc) {
             super();
             this.jc = jc;
-            if(readMethod != null)
+            if(readMethod != null) {
                 start();
+            }
         }
         @Override
         public void run() {
@@ -135,12 +139,14 @@ public class JCurses implements UserInterface {
                         }
                     }
                     KeyboardEvent e;
-                    if(hasCharacter)
+                    if(hasCharacter) {
                         e = new KeyboardEvent(c);
-                    else
+                    } else {
                         e = new KeyboardEvent(code);
-                    for(KeyListener l : jc.keyListeners)
+                    }
+                    for(KeyListener l : jc.keyListeners) {
                         l.keyPressed(e);
+                    }
                 } catch(Exception e) { e.printStackTrace(); }
             }
         }
@@ -200,12 +206,14 @@ public class JCurses implements UserInterface {
         InputStream in;
 			
         in = p.getInputStream();
-        while ((c = in.read()) != -1)
+        while ((c = in.read()) != -1) {
             bout.write(c);
+        }
 
         in = p.getErrorStream();
-        while ((c = in.read()) != -1)
+        while ((c = in.read()) != -1) {
             bout.write(c);
+        }
 
         p.waitFor();
 
@@ -277,27 +285,30 @@ public class JCurses implements UserInterface {
 
     Object getCharColor(Color c) {
         Object cc = charColors.get(c);
-        if(cc != null)
+        if(cc != null) {
             return cc;
-        if(c == null)
+        }
+        if(c == null) {
             return null;
+        }
         String fieldName = "BLACK";
-        if(c == Color.RED)
+        if(c == Color.RED) {
             fieldName = "RED";
-        else if(c == Color.WHITE)
+        } else if(c == Color.WHITE) {
             fieldName = "WHITE";
-        else if(c == Color.BLUE)
+        } else if(c == Color.BLUE) {
             fieldName = "BLUE";
-        else if(c == Color.GREEN)
+        } else if(c == Color.GREEN) {
             fieldName = "GREEN";
-        else if(c == Color.MAGENTA)
+        } else if(c == Color.MAGENTA) {
             fieldName = "MAGENTA";
-        else if(c == Color.CYAN)
+        } else if(c == Color.CYAN) {
             fieldName = "CYAN";
-        else if(c == Color.YELLOW)
+        } else if(c == Color.YELLOW) {
             fieldName = "YELLOW";
-        else
+        } else {
             fieldName = "BLACK";
+        }
         try {
             cc = charColor.getConstructor(short.class, short.class).newInstance(charColor.getField("WHITE").getShort(null), charColor.getField(fieldName).getShort(null));
             charColors.put(c, cc);
@@ -369,10 +380,12 @@ public class JCurses implements UserInterface {
     public void print(String text, int x, int y) {
         synchronized(swapMutex) {
             for(int i=0; i<text.length(); i++) {
-                if(y >= getHeight())
+                if(y >= getHeight()) {
                     return;
-                while(buffer[y].length() <= x)
+                }
+                while(buffer[y].length() <= x) {
                     buffer[y].append(' ');
+                }
                 char c = text.charAt(i);
                 if(c == '\n') {
                     x = 0;
@@ -388,10 +401,12 @@ public class JCurses implements UserInterface {
     public void print(String text) {
         synchronized(swapMutex) {
             for(int i=0; i<text.length(); i++) {
-                if(row >= getHeight())
+                if(row >= getHeight()) {
                     return;
-                while(buffer[row].length() <= col)
+                }
+                while(buffer[row].length() <= col) {
                     buffer[row].append(' ');
+                }
                 char c = text.charAt(i);
                 if(c == '\n') {
                     col = 0;
@@ -434,17 +449,20 @@ public class JCurses implements UserInterface {
             for(int y = 0; y < getHeight(); y++) {
                 for(int x = 0; x < getWidth(); x++) {
                     char newChar = ' ';
-                    if(y < buffer.length && x < buffer[y].length())
+                    if(y < buffer.length && x < buffer[y].length()) {
                         newChar = buffer[y].charAt(x);
+                    }
                     char oldChar = ' ';
-                    if(y < prevBuffer.length && x < prevBuffer[y].length())
+                    if(y < prevBuffer.length && x < prevBuffer[y].length()) {
                         oldChar = prevBuffer[y].charAt(x);
+                    }
                     if(newChar != oldChar) {
                         /* we need to update this character */
                         newChars.addLast(new CharUpdate(y, x, newChar));
                         if(prevBuffer.length > y) {
-                            while(prevBuffer[y].length() <= x)
+                            while(prevBuffer[y].length() <= x) {
                                 prevBuffer[y].append(' ');
+                            }
                             prevBuffer[y].setCharAt(x, newChar);
                         }
                     }
@@ -455,10 +473,12 @@ public class JCurses implements UserInterface {
             prevBuffer = buffer;
             if(tmp.length < getHeight()) {
                 buffer = new StringBuffer[height];
-                for(int i=0; i<height; i++)
+                for(int i=0; i<height; i++) {
                     buffer[i] = new StringBuffer();
-            } else
+                }
+            } else {
                 buffer = tmp;
+            }
         }
 
         if((double)newChars.size() / (double)(getWidth() * getHeight()) > CLEAR_THRESHOLD) {
@@ -474,8 +494,9 @@ public class JCurses implements UserInterface {
                 } else {
                     for(int x = 0; x < getWidth(); x++) {
                         char newChar = ' ';
-                        if(y < buffer.length && x < buffer[y].length())
+                        if(y < buffer.length && x < buffer[y].length()) {
                             newChar = buffer[y].charAt(x);
+                        }
                         out.print(newChar);
                     }
                     out.print("\n");

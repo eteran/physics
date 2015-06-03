@@ -30,15 +30,18 @@ public class Drag implements Force {
 		double pangle = Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX());
 				
 		double angleDiff = vangle - pangle;
-		while(angleDiff >= Math.PI / 2.0)
-			angleDiff -= Math.PI / 2.0;
-		while(angleDiff <= Math.PI / -2.0)
-			angleDiff += Math.PI / 2.0;
+		while(angleDiff >= Math.PI / 2.0) {
+                    angleDiff -= Math.PI / 2.0;
+                }
+		while(angleDiff <= Math.PI / -2.0) {
+                    angleDiff += Math.PI / 2.0;
+                }
 		
-		if(angleDiff >= 0)
-			angleOfAttack = pangle + Math.PI / 2.0;
-		else
-			angleOfAttack = pangle - Math.PI / 2.0;
+		if(angleDiff >= 0) {
+                    angleOfAttack = pangle + Math.PI / 2.0;
+                } else {
+                    angleOfAttack = pangle - Math.PI / 2.0;
+                }
 		
 		magnitude = DRAG_COEFFICIENT * Math.abs(angleDiff) / (Math.PI / 2.0);
 		
@@ -63,15 +66,18 @@ public class Drag implements Force {
 
 		angleOfAttack = 0.0;
 		
-		if(magnitude == 0.0)
-			return;
+		if(magnitude == 0.0) {
+                    return;
+                }
 
 		if(fx == 0.0) {
 			angleOfAttack = Math.PI / 2.0;
-			if(fy >= 0.0)
-				angleOfAttack *= -1.0;
-		} else
-			angleOfAttack = Math.PI + Math.atan(fy / fx);
+			if(fy >= 0.0) {
+                            angleOfAttack *= -1.0;
+                        }
+		} else {
+                    angleOfAttack = Math.PI + Math.atan(fy / fx);
+                }
 		
 		p1.setAccelX(p1.getAccelX() + DRAG_COEFFICIENT * fx);
 		p1.setAccelY(p1.getAccelY() + DRAG_COEFFICIENT * fy);

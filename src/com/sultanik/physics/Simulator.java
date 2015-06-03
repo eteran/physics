@@ -76,8 +76,9 @@ public class Simulator {
             p.setAccelX(0.0);
             p.setAccelY(0.0);
         }
-        for(Force f : getForces())
+        for(Force f : getForces()) {
             f.applyForce(this);
+        }
     }
 
     void vertlet(HashSet<Particle> particles) {
@@ -99,30 +100,35 @@ public class Simulator {
             maxDiff = 0.0;
             
             /* first, make sure that none of the particles are below ground! */
-            for(Particle p : particles)
-                if(p.getY() < 0.0)
+            for(Particle p : particles) {
+                if(p.getY() < 0.0) {
                     p.setY(0.0);
+                }
+            }
 
             /* now apply all of the constraints */
             for(Constraint c : constraints) {
                 double cost = c.internalSatisfy();
-                if(cost > maxDiff)
+                if(cost > maxDiff) {
                     maxDiff = cost;
+                }
             }
         }
     }
 
     public HashSet<Particle> getParticles() {
         HashSet<Particle> particles = new HashSet<>();
-        for(Body body : bodies)
+        for(Body body : bodies) {
             particles.addAll(body.getParticles());
+        }
         return particles;
     }
 
     public HashSet<Constraint> getConstraints() {
         HashSet<Constraint> constraints = new HashSet<>();
-        for(Body body : bodies)
+        for(Body body : bodies) {
             constraints.addAll(body.getConstraints());
+        }
         constraints.addAll(this.constraints);
         return constraints;        
     }
@@ -134,8 +140,9 @@ public class Simulator {
     }
     public HashSet<Force> getForces() { 
         HashSet<Force> allForces = new HashSet<>(forces);
-        for(Body b : bodies)
+        for(Body b : bodies) {
             allForces.addAll(b.getForces());
+        }
         return allForces;
     }
 
@@ -160,14 +167,16 @@ public class Simulator {
              * in case one of the listeners removes itself from the
              * listeners during this iteration (which would otherwise
              * cause a concurrent modification exception). */
-            for(SimulationListener sl : l)
+            for(SimulationListener sl : l) {
                 sl.handleIteration(t);
+            }
         }
     }
 
     public void simulate(double untilTime) {
-        while(t <= untilTime)
+        while(t <= untilTime) {
             simulate();
+        }
     }
 
     public void addForce(Force force) {
@@ -208,10 +217,11 @@ public class Simulator {
                 if(e.getKeyCode() == KeyEvent.VK_SPACE) {
                     grapple.grapple();
                 } else if(e.getKeyChar() == 'a' || e.getKeyChar() == 'A') {
-                    if(grapple.isAttached())
+                    if(grapple.isAttached()) {
                         grapple.detatchRope();
-                    else
+                    } else {
                         grapple.attachGrapple();
+                    }
                 } else if(e.getKeyCode() == KeyEvent.VK_UP
                           ||
                           e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -231,14 +241,18 @@ public class Simulator {
         @Override
         public void paint(GraphicsContext sg) {
             synchronized(sim.getSimulationMutex()) {
-                for(Constraint c : sim.getConstraints())
+                for(Constraint c : sim.getConstraints()) {
                     c.paint(sg);
-                for(Body b : sim.getBodies())
+                }
+                for(Body b : sim.getBodies()) {
                     b.paint(sg);
-                for(Particle p : sim.getParticles())
+                }
+                for(Particle p : sim.getParticles()) {
                     p.paint(sg);
-                for(Force f : sim.getForces())
+                }
+                for(Force f : sim.getForces()) {
                     f.paint(sim, sg);
+                }
             }
         }
     }

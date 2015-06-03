@@ -34,16 +34,19 @@ public class AngleConstraint extends Constraint {
      */
     double angleBetween(double x1, double y1, double x2, double y2) {
         double a = (Math.atan2(y2, x2) - Math.atan2(y1, x1));
-        while(a < 0.0)
+        while(a < 0.0) {
             a += Math.PI * 2.0;
+        }
         return a;
     }
     double smallestAngleBetween(double x1, double y1, double x2, double y2) {
     	double a = (Math.atan2(y2, x2) - Math.atan2(y1, x1));
-    	while(a < 0.0)
-    		a += Math.PI * 2.0;
-    	while(a > Math.PI)
-    		a -= Math.PI;
+    	while(a < 0.0) {
+            a += Math.PI * 2.0;
+            }
+    	while(a > Math.PI) {
+            a -= Math.PI;
+            }
     	return a;
     }
 
@@ -51,8 +54,9 @@ public class AngleConstraint extends Constraint {
 
     @Override
     protected double satisfy() {
-        if(p1.isRigid() && p2.isRigid())
+        if(p1.isRigid() && p2.isRigid()) {
             return 0.0;
+        }
         double diff = angleBetween(p1.getX() - pivot.getX(), p1.getY() - pivot.getY(), p2.getX() - pivot.getX(), p2.getY() - pivot.getY());
     	
         ad = 0.0;
@@ -65,8 +69,9 @@ public class AngleConstraint extends Constraint {
     }
 
     protected double oldSatisfy() {
-        if(p1.isRigid() && p2.isRigid())
+        if(p1.isRigid() && p2.isRigid()) {
             return 0.0;
+        }
         double diff = angleBetween(p1.getX() - pivot.getX(), p1.getY() - pivot.getY(), p2.getX() - pivot.getX(), p2.getY() - pivot.getY());
 
         ad = 0.0;
@@ -75,14 +80,16 @@ public class AngleConstraint extends Constraint {
             /* are we closer to the min angle or the max angle? */
             double mindiff = diff - minAngle;
             double maxdiff = diff - maxAngle;
-            if(mindiff > Math.PI)
+            if(mindiff > Math.PI) {
                 mindiff -= 2.0 * Math.PI;
-            else if(mindiff < -Math.PI)
+            } else if(mindiff < -Math.PI) {
                 mindiff += 2.0 * Math.PI;
-            if(maxdiff > Math.PI)
+            }
+            if(maxdiff > Math.PI) {
                 maxdiff -= 2.0 * Math.PI;
-            else if(maxdiff < -Math.PI)
+            } else if(maxdiff < -Math.PI) {
                 maxdiff += 2.0 * Math.PI;
+            }
             double rotate = 0.0;
             if(Math.abs(mindiff) < Math.abs(maxdiff)) {
                 rotate = mindiff;
@@ -99,10 +106,11 @@ public class AngleConstraint extends Constraint {
 //                    par1 = (BasicParticle)p1;
 //                else
 //                    par1 = new BasicParticle(p1);
-                if(p2 instanceof BasicParticle)
+                if(p2 instanceof BasicParticle) {
                     par2 = (BasicParticle)p1;
-                else
+                } else {
                     par2 = new BasicParticle(p2);
+                }
             // if(p1.isRigid()) {
                 BasicParticle rotated = par2.rotate(rotate, pivot);
                 p2.setX(rotated.getX());

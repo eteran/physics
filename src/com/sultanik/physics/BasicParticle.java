@@ -48,21 +48,24 @@ public class BasicParticle implements Particle {
     }
     static double angleFromX(double x, double y) {
         if(x == 0.0) {
-            if(y == 0.0)
+            if(y == 0.0) {
                 return 0.0;
-            else if(y > 0.0)
+            } else if(y > 0.0) {
                 return Math.PI / 2.0;
-            else
+            } else {
                 return Math.PI / -2.0;
+            }
         } else if(y >= 0.0) {
             double a = Math.atan(y / x);
-            if(x < 0.0)
+            if(x < 0.0) {
                 a = Math.PI + a;
+            }
             return a;
         } else {
             double a = Math.atan(-y / -x);
-            if(x >= 0.0)
+            if(x >= 0.0) {
                 a += Math.PI;
+            }
             return Math.PI + a;
         }
     }
@@ -71,8 +74,9 @@ public class BasicParticle implements Particle {
     }
     public BasicParticle rotate(double angle, boolean preserveVelocity) {
         BasicParticle copy = new BasicParticle(this);
-        if(getX() == 0.0 && getY() == 0.0)
+        if(getX() == 0.0 && getY() == 0.0) {
             return copy;
+        }
         double length = Math.sqrt(getX() * getX() + getY() * getY());
         double a = angleFromX(getX(), getY());
         copy.setX(length * Math.cos(angle + a));

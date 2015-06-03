@@ -24,10 +24,11 @@ public abstract class Constraint implements Iterable<Particle> {
     }
 
     public Collection<Particle> getParticles() {
-        if(body != null)
+        if(body != null) {
             return body.getParticles();
-        else
+        } else {
             return particles;
+        }
     }
 
     @Override

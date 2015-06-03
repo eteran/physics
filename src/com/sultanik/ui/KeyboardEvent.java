@@ -50,56 +50,59 @@ public class KeyboardEvent extends KeyEvent {
     }
     public static int lookupKeyCode(int key) {
         Integer k = keyMap.get(key);
-        if(k != null)
+        if(k != null) {
             return k;
-        if(key == KEY_BACKSPACE)
+        }
+        if(key == KEY_BACKSPACE) {
             k = key;
-        else if((char)key == ' ')
+        } else if((char)key == ' ') {
             k = VK_SPACE;
-        else if(key == KEY_DOWN)
+        } else if(key == KEY_DOWN) {
             k = VK_DOWN;
-        else if(key == KEY_END)
+        } else if(key == KEY_END) {
             k = VK_END;
-        else if(key == KEY_F1)
+        } else if(key == KEY_F1) {
             k = VK_F1;
-        else if(key == KEY_F10)
+        } else if(key == KEY_F10) {
             k = VK_F10;
-        else if(key == KEY_F11)
+        } else if(key == KEY_F11) {
             k = VK_F11;
-        else if(key == KEY_F12)
+        } else if(key == KEY_F12) {
             k = VK_F12;
-        else if(key == KEY_F2)
+        } else if(key == KEY_F2) {
             k = VK_F2;
-        else if(key == KEY_F3)
+        } else if(key == KEY_F3) {
             k = VK_F3;
-        else if(key == KEY_F4)
+        } else if(key == KEY_F4) {
             k = VK_F4;
-        else if(key == KEY_F5)
+        } else if(key == KEY_F5) {
             k = VK_F5;
-        else if(key == KEY_F6)
+        } else if(key == KEY_F6) {
             k = VK_F6;
-        else if(key == KEY_F7)
+        } else if(key == KEY_F7) {
             k = VK_F7;
-        else if(key == KEY_F8)
+        } else if(key == KEY_F8) {
             k = VK_F8;
-        else if(key == KEY_F9)
+        } else if(key == KEY_F9) {
             k = VK_F9;
-        else if(key == KEY_HOME)
+        } else if(key == KEY_HOME) {
             k = VK_HOME;
-        else if(key == KEY_LEFT)
+        } else if(key == KEY_LEFT) {
             k = VK_LEFT;
-        else if(key == KEY_NPAGE)
+        } else if(key == KEY_NPAGE) {
             k = VK_PAGE_DOWN;
-        else if(key == KEY_PPAGE)
+        } else if(key == KEY_PPAGE) {
             k = VK_PAGE_UP;
-        else if(key == KEY_PRINT)
+        } else if(key == KEY_PRINT) {
             k = VK_PRINTSCREEN;
-        else if(key == KEY_RIGHT)
+        } else if(key == KEY_RIGHT) {
             k = VK_RIGHT;
-        else if(key == KEY_UP)
+        } else if(key == KEY_UP) {
             k = VK_UP;
-        if(k == null)
+        }
+        if(k == null) {
             return -1;
+        }
         keyMap.put(key, k);
         return k;
     }

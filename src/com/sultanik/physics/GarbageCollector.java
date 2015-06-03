@@ -27,9 +27,10 @@ public class GarbageCollector implements SimulationListener {
     @Override
     public void handleIteration(double newTime) {
         /* see if we need to do a garbage collection */
-        if(newTime - lastCollectionTime < interval)
+        if(newTime - lastCollectionTime < interval) {
             return;
-        /* we need to garbage collect! */
+            /* we need to garbage collect! */
+        }
 
         //System.out.println("Time: " + simulator.currentTime());
         //System.out.println("Garbage collecting!");

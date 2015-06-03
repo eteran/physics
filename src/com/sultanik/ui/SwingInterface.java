@@ -68,22 +68,27 @@ public class SwingInterface extends JPanel implements UserInterface {
             Point2D p = focusProvider.getFocalPoint();
             sg.xOffset = p.getX() - sg.getWidth() / 2.0;
             sg.yOffset = p.getY() - sg.getHeight() / 2.0;
-            if(sg.xOffset < 0.0)
+            if(sg.xOffset < 0.0) {
                 sg.xOffset = 0.0;
-            if(sg.yOffset < 0.0)
+            }
+            if(sg.yOffset < 0.0) {
                 sg.yOffset = 0.0;
+            }
         } else {
             synchronized(sg.focusMutex) {
-                if(sg.nextXOffset >= 0.0)
+                if(sg.nextXOffset >= 0.0) {
                     sg.xOffset = sg.nextXOffset;
-                if(sg.nextYOffset >= 0.0)
+                }
+                if(sg.nextYOffset >= 0.0) {
                     sg.yOffset = sg.nextYOffset;
+                }
                 sg.nextXOffset = -1.0;
                 sg.nextYOffset = -1.0;
             }
         }
 
-        for(RepaintListener listener : listeners)
+        for(RepaintListener listener : listeners) {
             listener.paint(sg);
+        }
     }
 }

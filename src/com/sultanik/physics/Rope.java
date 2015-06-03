@@ -81,13 +81,15 @@ public class Rope implements Body {
 
     @Override
     public void paint(GraphicsContext graphicsContext) {
-        if(links.size() <= 0)
+        if(links.size() <= 0) {
             return;
+        }
         graphicsContext.setLineThickness(2.0);
         java.awt.geom.Point2D points[] = new java.awt.geom.Point2D[links.size()];
         int i=0;
-        for(Particle p : links)
+        for(Particle p : links) {
             points[i++] = new java.awt.geom.Point2D.Double(p.getX(), p.getY());
+        }
         graphicsContext.setColor(color);
         graphicsContext.drawBezier(points);
         // for(Constraint c : constraints) {

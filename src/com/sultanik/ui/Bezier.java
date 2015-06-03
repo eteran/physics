@@ -57,10 +57,12 @@ public class Bezier implements Shape {
         w = 0;
         h = 0;
         for(Point2D p : knots) {
-            if(p.getX() > w)
+            if(p.getX() > w) {
                 w = p.getX();
-            if(p.getY() > h)
+            }
+            if(p.getY() > h) {
                 h = p.getY();
+            }
         }
         int n1 = n+1;
         dx = new double[n1];
@@ -126,9 +128,11 @@ public class Bezier implements Shape {
     }
 
     public boolean intersectsLine(Line2D line) {
-        for(Line2D segment : lines)
-            if(segment.intersectsLine(line))
+        for(Line2D segment : lines) {
+            if(segment.intersectsLine(line)) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -155,14 +159,17 @@ public class Bezier implements Shape {
             double h = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
             double lastLineAngle;
             if(xDiff == 0) {
-                if(yDiff > 0)
+                if(yDiff > 0) {
                     lastLineAngle = Math.PI / 2.0;
-                else
+                } else {
                     lastLineAngle = Math.PI * 3.0 / 2.0;
-            } else
+                }
+            } else {
                 lastLineAngle = Math.atan(yDiff / xDiff);
-            if(xDiff < 0)
+            }
+            if(xDiff < 0) {
                 lastLineAngle += Math.PI;
+            }
             double p0[] = new double[2];
             double p1[] = new double[2];
             double p2[] = new double[2];
@@ -184,8 +191,9 @@ public class Bezier implements Shape {
             arrowHead.addPoint((int)p1[0], (int)p1[1]);
             arrowHead.addPoint((int)p2[0], (int)p2[1]);
         }
-        if(drawArrow && arrowHead != null)
+        if(drawArrow && arrowHead != null) {
             g2d.fillPolygon(arrowHead);
+        }
     }
 
     /* implement the Shape interface based off of our path */

@@ -131,10 +131,11 @@ public class Person extends BodyAdapter {
     public boolean isBroken() { return broken; }
     @Override
     public Collection<Constraint> getConstraints() {
-        if(!broken)
+        if(!broken) {
             return super.getConstraints();
-        else
+        } else {
             return brokenConstraints;
+        }
     }
     @Override
     public Collection<Particle> getParticles() {
@@ -159,8 +160,9 @@ public class Person extends BodyAdapter {
                 DistanceConstraint dc = (DistanceConstraint)c;
                 if(dc == headConstraint) {
                     graphicsContext.fillOval(head.getX() - 0.1, head.getY() - 0.1, 0.2, 0.2);
-                } else
+                } else {
                     graphicsContext.drawLine(dc.getP1().getX(), dc.getP1().getY(), dc.getP2().getX(), dc.getP2().getY());
+                }
             }
         }
     }

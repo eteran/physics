@@ -30,11 +30,13 @@ public class SwingGraphics implements GraphicsContext {
     public void ensureFocus(double x, double y) {
         synchronized(focusMutex) {
             nextXOffset = x - getWidth() / 2.0;
-            if(nextXOffset < 0.0)
+            if(nextXOffset < 0.0) {
                 nextXOffset = 0.0;
+            }
             nextYOffset = y - getHeight() / 2.0;
-            if(nextYOffset < 0.0)
+            if(nextYOffset < 0.0) {
                 nextYOffset = 0.0;
+            }
         }
     }
 
@@ -104,9 +106,10 @@ public class SwingGraphics implements GraphicsContext {
     @Override
     public void drawBezier(Point2D... knots) {
         Point2D k[] = new Point2D[knots.length];
-        for(int i=0; i<knots.length; i++)
+        for(int i=0; i<knots.length; i++) {
             k[i] = new Point2D.Double((knots[i].getX() - xOffset) * pixelsPerMeter,
-                                      (double)height - (knots[i].getY() - yOffset) * pixelsPerMeter);
+                    (double)height - (knots[i].getY() - yOffset) * pixelsPerMeter);
+        }
         (new Bezier(k)).drawInterpolated(graphics);
     }
 

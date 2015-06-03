@@ -30,8 +30,9 @@ public class DistanceConstraint extends Constraint {
         double deltaY = p2.getY() - p1.getY();
         double deltaLength = Math.hypot(deltaX, deltaY);
         double diff = (deltaLength - distance) / deltaLength;
-        if((p1.isRigid() || fixLeft) && (p2.isRigid() || fixRight))
+        if((p1.isRigid() || fixLeft) && (p2.isRigid() || fixRight)) {
             return Math.abs(diff); /* there's nothing we can do if they're both fixed! */
+        }
         if(deltaLength == 0.0) {
             /* TODO: intelligently avoid division by zero! */
             return distance;

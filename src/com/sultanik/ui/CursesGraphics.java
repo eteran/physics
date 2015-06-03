@@ -28,11 +28,13 @@ public class CursesGraphics implements GraphicsContext {
     public void ensureFocus(double x, double y) {
         synchronized(focusMutex) {
             nextXOffset = x - getWidth() / 2.0;
-            if(nextXOffset < 0.0)
+            if(nextXOffset < 0.0) {
                 nextXOffset = 0.0;
+            }
             nextYOffset = y - getHeight() / 2.0;
-            if(nextYOffset < 0.0)
+            if(nextYOffset < 0.0) {
                 nextYOffset = 0.0;
+            }
         }
     }
 
@@ -131,20 +133,22 @@ public class CursesGraphics implements GraphicsContext {
             //            if(xDraw >= 0 && xDraw < jCurses.getWidth() && yDraw >= 0 && yDraw < jCurses.getHeight())
             //    jCurses.drawString("X", xDraw, yDraw);
             if(x != x1) {
-                if(yDraw == lastY && ystep < 0)
+                if(yDraw == lastY && ystep < 0) {
                     lineChar = "_";
-                else if(yDraw == lastY)
+                } else if(yDraw == lastY) {
                     lineChar = "-";
-                else if(xDraw == lastX)
+                } else if(xDraw == lastX) {
                     lineChar = "|";
-                else if((xDraw > lastX && yDraw > lastY)
+                } else if((xDraw > lastX && yDraw > lastY)
                         ||
-                        (xDraw < lastX && yDraw < lastY))
+                        (xDraw < lastX && yDraw < lastY)) {
                     lineChar = "\\";
-                else
+                } else {
                     lineChar = "/";
-                if(lastX >= 0 && lastX < jCurses.getWidth() && lastY >= 0 && lastY < jCurses.getHeight())
+                }
+                if(lastX >= 0 && lastX < jCurses.getWidth() && lastY >= 0 && lastY < jCurses.getHeight()) {
                     jCurses.drawString(lineChar, lastX, lastY);
+                }
             }
             lastX = xDraw;
             lastY = yDraw;
@@ -156,14 +160,16 @@ public class CursesGraphics implements GraphicsContext {
                 E += TwoDy; //E += 2*Dy;
             }
         }
-        if(lastX >= 0 && lastX < jCurses.getWidth() && lastY >= 0 && lastY < jCurses.getHeight())
+        if(lastX >= 0 && lastX < jCurses.getWidth() && lastY >= 0 && lastY < jCurses.getHeight()) {
             jCurses.drawString(lineChar, lastX, lastY);
+        }
     }
 
     @Override
     public void drawBezier(Point2D... knots) {
-        for(int i=0; i<knots.length - 1; i++)
+        for(int i=0; i<knots.length - 1; i++) {
             drawLine(knots[i].getX(), knots[i].getY(), knots[i+1].getX(), knots[i+1].getY());
+        }
     }
 
     @Override

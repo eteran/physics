@@ -35,8 +35,9 @@ public class Grapple extends BodyAdapter implements SimulationListener {
     public Simulator getSimulator() { return simulator; }
 
     public void detatchRope() {
-        if(rope == null)
+        if(rope == null) {
             return; /* there's no rope to detatch! */
+        }
         rope.setColor(java.awt.Color.MAGENTA);
         /* check to see if the rope can be garbage collected every 3 seconds */
         new GarbageCollector(rope, simulator, 3.0);
@@ -98,10 +99,11 @@ public class Grapple extends BodyAdapter implements SimulationListener {
     }
 
     public Particle getGrapple() {
-        if(rope == null)
+        if(rope == null) {
             return null;
-        else
+        } else {
             return rope.getLinks().getLast();
+        }
     }
 
     @Override
@@ -123,8 +125,9 @@ public class Grapple extends BodyAdapter implements SimulationListener {
 
     @Override
     public void handleIteration(double newTime) {
-        if(rope == null || grappled)
+        if(rope == null || grappled) {
             return;
+        }
         if((double)(chainLinks + 1) * chainLinkLength <= maxChainLength) {
             while(newTime - lastAddTime >= chainLinkLength / velocity) {
                 /* add a new chain link */
@@ -139,8 +142,9 @@ public class Grapple extends BodyAdapter implements SimulationListener {
                 rope.addLink(new BasicParticle(x, y, xold, yold, 0.0, 0.0), chainLinkLength);
                 lastAddTime += chainLinkLength / velocity;
             }
-        } else
+        } else {
             detatchRope();
+        }
     }
 
     @Override

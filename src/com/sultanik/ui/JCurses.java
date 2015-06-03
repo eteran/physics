@@ -15,13 +15,13 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class JCurses implements UserInterface {
+public final class JCurses implements UserInterface {
 
     PrintStream out;
     StringBuffer[] prevBuffer;
     StringBuffer[] buffer;
     int row, col;
-    Object swapMutex = new Object();
+    final Object swapMutex = new Object();
     int height, width;
     FocusProvider focusProvider;
     LinkedHashSet<RepaintListener> listeners;

@@ -10,8 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class SwingInterface extends JPanel implements UserInterface {
-	private static final long serialVersionUID = 1L;
-	SwingGraphics sg;
+
+    private static final long serialVersionUID = 1L;
+    SwingGraphics sg;
     FocusProvider focusProvider;
     LinkedHashSet<RepaintListener> listeners;
 
@@ -19,7 +20,7 @@ public class SwingInterface extends JPanel implements UserInterface {
         super();
         listeners = new LinkedHashSet<>();
         JFrame frame = new JFrame(title);
-        setPreferredSize(new Dimension(640,480));
+        setPreferredSize(new Dimension(640, 480));
         focusProvider = null;
         setFocusable(true);
         sg = new SwingGraphics(null, 5.0, getWidth(), getHeight(), 0.0, 0.0);
@@ -31,17 +32,17 @@ public class SwingInterface extends JPanel implements UserInterface {
         requestFocusInWindow();
     }
 
-        @Override
+    @Override
     public void addRepaintListener(RepaintListener listener) {
         listeners.add(listener);
     }
 
-        @Override
+    @Override
     public void removeRepaintListener(RepaintListener listener) {
         listeners.remove(listener);
     }
 
-        @Override
+    @Override
     public void setFocusProvider(FocusProvider focusProvider) {
         this.focusProvider = focusProvider;
     }
@@ -54,32 +55,32 @@ public class SwingInterface extends JPanel implements UserInterface {
         sg.ensureFocus(x, y);
     }
 
-        @Override
+    @Override
     public void paint(Graphics graphics) {
         Graphics2D g2d = (Graphics2D)graphics;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                             RenderingHints.VALUE_ANTIALIAS_ON);
+                RenderingHints.VALUE_ANTIALIAS_ON);
         sg.setGraphics(g2d);
         sg.setWidth(getWidth());
         sg.setHeight(getHeight());
         sg.clear();
 
-        if(focusProvider != null) {
+        if (focusProvider != null) {
             Point2D p = focusProvider.getFocalPoint();
             sg.xOffset = p.getX() - sg.getWidth() / 2.0;
             sg.yOffset = p.getY() - sg.getHeight() / 2.0;
-            if(sg.xOffset < 0.0) {
+            if (sg.xOffset < 0.0) {
                 sg.xOffset = 0.0;
             }
-            if(sg.yOffset < 0.0) {
+            if (sg.yOffset < 0.0) {
                 sg.yOffset = 0.0;
             }
         } else {
-            synchronized(sg.focusMutex) {
-                if(sg.nextXOffset >= 0.0) {
+            synchronized (sg.focusMutex) {
+                if (sg.nextXOffset >= 0.0) {
                     sg.xOffset = sg.nextXOffset;
                 }
-                if(sg.nextYOffset >= 0.0) {
+                if (sg.nextYOffset >= 0.0) {
                     sg.yOffset = sg.nextYOffset;
                 }
                 sg.nextXOffset = -1.0;
@@ -87,7 +88,7 @@ public class SwingInterface extends JPanel implements UserInterface {
             }
         }
 
-        for(RepaintListener listener : listeners) {
+        for (RepaintListener listener : listeners) {
             listener.paint(sg);
         }
     }

@@ -11,10 +11,11 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 public class Simulator {
+
     /**
      * The version of Physics.
      */
-    public static final String VERSION  = "0.1";
+    public static final String VERSION = "0.1";
     /**
      * The revision date for this version of Physics.
      */
@@ -28,8 +29,8 @@ public class Simulator {
     double t;
     Object simulationMutex = new Object();
 
-    private static final int	CONSTRAINT_SATISFICATION_ITERATIONS	= 100;
-    private static final double	CONSTRAINT_SATISFICATION_THRESHOLD	= 0.001;
+    private static final int CONSTRAINT_SATISFICATION_ITERATIONS = 100;
+    private static final double CONSTRAINT_SATISFICATION_THRESHOLD = 0.001;
 
     public Simulator(double timeStep) {
         listeners = new LinkedHashSet<>();
@@ -41,7 +42,7 @@ public class Simulator {
     }
 
     public void addListener(SimulationListener listener) {
-        synchronized(listeners) {
+        synchronized (listeners) {
             listeners.add(listener);
         }
     }
@@ -72,18 +73,18 @@ public class Simulator {
 
     void accumulateForces(HashSet<Particle> particles, HashSet<Constraint> constraints) {
         /* first, clear all of the previous forces */
-        for(Particle p : particles) {
+        for (Particle p : particles) {
             p.setAccelX(0.0);
             p.setAccelY(0.0);
         }
-        for(Force f : getForces()) {
+        for (Force f : getForces()) {
             f.applyForce(this);
         }
     }
 
     void vertlet(HashSet<Particle> particles) {
-        for(Particle p : particles) {
-            if(!p.isFixed()) {
+        for (Particle p : particles) {
+            if (!p.isFixed()) {
                 double tmpX = p.getX();
                 double tmpY = p.getY();
                 p.setX(2.0 * tmpX - p.getPreviousX() + p.getAccelX() * timeStep * timeStep);
@@ -96,20 +97,20 @@ public class Simulator {
 
     void satisfyConstraints(HashSet<Particle> particles, HashSet<Constraint> constraints) {
         double maxDiff = CONSTRAINT_SATISFICATION_THRESHOLD;
-        for(int i=0; i <= CONSTRAINT_SATISFICATION_ITERATIONS && maxDiff >= CONSTRAINT_SATISFICATION_THRESHOLD; i++) {
+        for (int i = 0; i <= CONSTRAINT_SATISFICATION_ITERATIONS && maxDiff >= CONSTRAINT_SATISFICATION_THRESHOLD; i++) {
             maxDiff = 0.0;
-            
+
             /* first, make sure that none of the particles are below ground! */
-            for(Particle p : particles) {
-                if(p.getY() < 0.0) {
+            for (Particle p : particles) {
+                if (p.getY() < 0.0) {
                     p.setY(0.0);
                 }
             }
 
             /* now apply all of the constraints */
-            for(Constraint c : constraints) {
+            for (Constraint c : constraints) {
                 double cost = c.internalSatisfy();
-                if(cost > maxDiff) {
+                if (cost > maxDiff) {
                     maxDiff = cost;
                 }
             }
@@ -118,7 +119,7 @@ public class Simulator {
 
     public HashSet<Particle> getParticles() {
         HashSet<Particle> particles = new HashSet<>();
-        for(Body body : bodies) {
+        for (Body body : bodies) {
             particles.addAll(body.getParticles());
         }
         return particles;
@@ -126,21 +127,22 @@ public class Simulator {
 
     public HashSet<Constraint> getConstraints() {
         HashSet<Constraint> constraints = new HashSet<>();
-        for(Body body : bodies) {
+        for (Body body : bodies) {
             constraints.addAll(body.getConstraints());
         }
         constraints.addAll(this.constraints);
-        return constraints;        
+        return constraints;
     }
 
-    public HashSet<Body> getBodies() { 
-        synchronized(getSimulationMutex()) {
+    public HashSet<Body> getBodies() {
+        synchronized (getSimulationMutex()) {
             return bodies;
         }
     }
-    public HashSet<Force> getForces() { 
+
+    public HashSet<Force> getForces() {
         HashSet<Force> allForces = new HashSet<>(forces);
-        for(Body b : bodies) {
+        for (Body b : bodies) {
             allForces.addAll(b.getForces());
         }
         return allForces;
@@ -151,7 +153,7 @@ public class Simulator {
     }
 
     public void simulate() {
-        synchronized(simulationMutex) {
+        synchronized (simulationMutex) {
             t += timeStep;
             HashSet<Particle> particles = getParticles();
             HashSet<Constraint> constraints = getConstraints();
@@ -161,20 +163,20 @@ public class Simulator {
             satisfyConstraints(particles, constraints);
         }
 
-        synchronized(listeners) {
+        synchronized (listeners) {
             LinkedHashSet<SimulationListener> l = new LinkedHashSet<>(listeners);
             /* we need to iterate over l as opposed to listeners just
              * in case one of the listeners removes itself from the
              * listeners during this iteration (which would otherwise
              * cause a concurrent modification exception). */
-            for(SimulationListener sl : l) {
+            for (SimulationListener sl : l) {
                 sl.handleIteration(t);
             }
         }
     }
 
     public void simulate(double untilTime) {
-        while(t <= untilTime) {
+        while (t <= untilTime) {
             simulate();
         }
     }
@@ -184,22 +186,25 @@ public class Simulator {
     }
 
     public void addBody(Body body) {
-        synchronized(simulationMutex) {
+        synchronized (simulationMutex) {
             bodies.add(body);
         }
     }
 
     public void removeBody(Body body) {
-        synchronized(getSimulationMutex()) {
+        synchronized (getSimulationMutex()) {
             bodies.remove(body);
         }
     }
 
     private static class Focuser implements FocusProvider {
+
         Particle p;
+
         Focuser(Particle p) {
             this.p = p;
         }
+
         @Override
         public java.awt.geom.Point2D getFocalPoint() {
             return new java.awt.geom.Point2D.Double(p.getX(), p.getY());
@@ -207,28 +212,29 @@ public class Simulator {
     }
 
     public static class KeyHandler extends KeyAdapter {
+
         Grapple grapple;
 
-        public KeyHandler(Grapple grapple) { this.grapple = grapple; }
+        public KeyHandler(Grapple grapple) {
+            this.grapple = grapple;
+        }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            synchronized(grapple.simulator.getSimulationMutex()) {
-                if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+            synchronized (grapple.simulator.getSimulationMutex()) {
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                     grapple.grapple();
-                } else if(e.getKeyChar() == 'a' || e.getKeyChar() == 'A') {
-                    if(grapple.isAttached()) {
+                } else if (e.getKeyChar() == 'a' || e.getKeyChar() == 'A') {
+                    if (grapple.isAttached()) {
                         grapple.detatchRope();
                     } else {
                         grapple.attachGrapple();
                     }
-                } else if(e.getKeyCode() == KeyEvent.VK_UP
-                          ||
-                          e.getKeyCode() == KeyEvent.VK_LEFT) {
+                } else if (e.getKeyCode() == KeyEvent.VK_UP
+                        || e.getKeyCode() == KeyEvent.VK_LEFT) {
                     grapple.setAngle(grapple.getAngle() + 5.0);
-                } else if(e.getKeyCode() == KeyEvent.VK_DOWN
-                          ||
-                          e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN
+                        || e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     grapple.setAngle(grapple.getAngle() - 5.0);
                 }
             }
@@ -236,21 +242,26 @@ public class Simulator {
     }
 
     private static class Repainter implements RepaintListener {
+
         Simulator sim;
-        Repainter(Simulator sim) {this.sim = sim;}
+
+        Repainter(Simulator sim) {
+            this.sim = sim;
+        }
+
         @Override
         public void paint(GraphicsContext sg) {
-            synchronized(sim.getSimulationMutex()) {
-                for(Constraint c : sim.getConstraints()) {
+            synchronized (sim.getSimulationMutex()) {
+                for (Constraint c : sim.getConstraints()) {
                     c.paint(sg);
                 }
-                for(Body b : sim.getBodies()) {
+                for (Body b : sim.getBodies()) {
                     b.paint(sg);
                 }
-                for(Particle p : sim.getParticles()) {
+                for (Particle p : sim.getParticles()) {
                     p.paint(sg);
                 }
-                for(Force f : sim.getForces()) {
+                for (Force f : sim.getForces()) {
                     f.paint(sim, sg);
                 }
             }
@@ -266,6 +277,7 @@ public class Simulator {
 
         double startTime = System.currentTimeMillis();
         double runTime = 120.0; /* seconds */
+
         double lastTime = startTime;
 
         sim.addForce(new Gravity());
@@ -277,32 +289,32 @@ public class Simulator {
         // sim.addBody(rope);
         // //bp.setFixed(true);
 
-        BasicParticle bp = new BasicParticle(2.0,150.0,1.9,150.0,0.0,0.0);
+        BasicParticle bp = new BasicParticle(2.0, 150.0, 1.9, 150.0, 0.0, 0.0);
         //bp.setFixed(true);
         Grapple grapple = new Grapple(sim,
-                                      bp,
-                                      20.0,
-                                      30.0,
-                                      3.0,
-                                      65.0);
+                bp,
+                20.0,
+                30.0,
+                3.0,
+                65.0);
         sim.addBody(grapple);
         Person p = new Person(grapple.getLocation());
         sim.addBody(p);
         sim.addConstraint(new DistanceConstraint(p.getRightHand(), grapple.getLocation(), 0.0));
-        
+
         ui.addKeyListener(new KeyHandler(grapple));
 
         ui.setFocusProvider(new Focuser(grapple.getLocation()));
 
-        while(System.currentTimeMillis() < startTime + runTime * 1000.0) {
+        while (System.currentTimeMillis() < startTime + runTime * 1000.0) {
             lastTime = System.currentTimeMillis();
             sim.simulate();
             ui.repaint();
             int sleepTime = (int)(resolution * 1000.0 - (System.currentTimeMillis() - lastTime) + 0.5);
-            if(sleepTime > 0) {
+            if (sleepTime > 0) {
                 try {
                     Thread.sleep(sleepTime);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

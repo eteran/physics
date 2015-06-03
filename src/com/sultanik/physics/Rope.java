@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 public class Rope implements Body {
+
     LinkedList<Particle> links;
     HashSet<Constraint> constraints;
     HashSet<Force> forces;
@@ -32,22 +33,27 @@ public class Rope implements Body {
     public void addParticle(Particle particle) {
         links.add(particle);
     }
+
     @Override
     public void removeParticle(Particle particle) {
         links.remove(particle);
     }
+
     @Override
     public void addConstraint(Constraint constraint) {
         constraints.add(constraint);
     }
+
     @Override
     public void removeConstraint(Constraint constraint) {
         constraints.remove(constraint);
     }
+
     @Override
     public void addForce(Force force) {
         forces.add(force);
     }
+
     @Override
     public void removeForce(Force force) {
         forces.remove(force);
@@ -82,13 +88,13 @@ public class Rope implements Body {
 
     @Override
     public void paint(GraphicsContext graphicsContext) {
-        if(links.size() <= 0) {
+        if (links.size() <= 0) {
             return;
         }
         graphicsContext.setLineThickness(2.0);
         java.awt.geom.Point2D points[] = new java.awt.geom.Point2D[links.size()];
-        int i=0;
-        for(Particle p : links) {
+        int i = 0;
+        for (Particle p : links) {
             points[i++] = new java.awt.geom.Point2D.Double(p.getX(), p.getY());
         }
         graphicsContext.setColor(color);

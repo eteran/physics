@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 public abstract class Constraint implements Iterable<Particle> {
+
     HashSet<Particle> particles;
     Body body;
 
@@ -25,7 +26,7 @@ public abstract class Constraint implements Iterable<Particle> {
     }
 
     public Collection<Particle> getParticles() {
-        if(body != null) {
+        if (body != null) {
             return body.getParticles();
         } else {
             return Collections.unmodifiableCollection(particles);
@@ -37,9 +38,12 @@ public abstract class Constraint implements Iterable<Particle> {
         return getParticles().iterator();
     }
 
-    double internalSatisfy() { return satisfy(); }
+    double internalSatisfy() {
+        return satisfy();
+    }
 
     protected abstract double satisfy();
 
-    public void paint(GraphicsContext graphicsContext) { }
+    public void paint(GraphicsContext graphicsContext) {
+    }
 }

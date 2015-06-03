@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 public class Person extends BodyAdapter {
+
     BasicParticle rightHand, leftHand;
     BasicParticle rightElbow, leftElbow;
     BasicParticle neck, waist;
@@ -18,11 +19,14 @@ public class Person extends BodyAdapter {
     HashSet<Particle> brokenParticles;
 
     private class BreakingForce implements Force {
-        BreakingForce() { }
+
+        BreakingForce() {
+        }
+
         @Override
         public void applyForce(Simulator simulator) {
-            for(Particle p : getParticles()) {
-                if(p.getY() <= 0.0) {
+            for (Particle p : getParticles()) {
+                if (p.getY() <= 0.0) {
                     System.out.println("Broken!");
                     setBroken(true);
                     removeForce(this);
@@ -30,8 +34,10 @@ public class Person extends BodyAdapter {
                 }
             }
         }
+
         @Override
-        public void paint(Simulator simulator, GraphicsContext graphicsContext) { }
+        public void paint(Simulator simulator, GraphicsContext graphicsContext) {
+        }
     }
 
     double neckLength = 0.2;
@@ -50,16 +56,15 @@ public class Person extends BodyAdapter {
         // torsoLength *= 3.0;
         // upperLegLength *= 3.0;
         // lowerLegLength *= 3.0;
-
         rightHand = new BasicParticle(initialLocation);
         rightElbow = rightHand.add(new BasicParticle(0, lowerArmLength));
         neck = rightElbow.add(new BasicParticle(0, upperArmLength));
         leftHand = new BasicParticle(initialLocation);
         leftElbow = leftHand.add(new BasicParticle(0, lowerArmLength));
-        waist = neck.add(new BasicParticle(0,-torsoLength));
-        leftKnee = waist.add(new BasicParticle(0,-upperLegLength));
+        waist = neck.add(new BasicParticle(0, -torsoLength));
+        leftKnee = waist.add(new BasicParticle(0, -upperLegLength));
         rightKnee = new BasicParticle(leftKnee);
-        leftFoot = leftKnee.add(new BasicParticle(0,-lowerLegLength));
+        leftFoot = leftKnee.add(new BasicParticle(0, -lowerLegLength));
         rightFoot = new BasicParticle(leftFoot);
         head = neck.add(new BasicParticle(0, neckLength));
         addParticle(rightHand);
@@ -75,7 +80,7 @@ public class Person extends BodyAdapter {
         addParticle(head);
 
         addForce(new BreakingForce());
-        
+
         addConstraint(new DistanceConstraint(rightHand, rightElbow, lowerArmLength));
         addConstraint(new DistanceConstraint(rightElbow, neck, upperArmLength));
         addConstraint(new DistanceConstraint(leftHand, leftElbow, lowerArmLength));
@@ -87,16 +92,16 @@ public class Person extends BodyAdapter {
         addConstraint(new DistanceConstraint(rightKnee, rightFoot, lowerLegLength));
         headConstraint = new DistanceConstraint(neck, head, neckLength);
         addConstraint(headConstraint);
-        
+
         broken = false;
 
         //addConstraint(new AngleConstraint(rightHand, rightElbow, neck, 0.0, Math.PI / 2.0));
-        
         //addForce(new Drag(rightHand, rightElbow));
     }
+
     public void setBroken(boolean broken) {
         this.broken = broken;
-        if(broken == true) {
+        if (broken == true) {
             brokenConstraints = new HashSet<>();
             brokenParticles = new HashSet<>();
             BasicParticle neck2 = new BasicParticle(neck);
@@ -129,18 +134,23 @@ public class Person extends BodyAdapter {
             brokenConstraints.add(new DistanceConstraint(rightFoot, rightKnee2, lowerLegLength));
         }
     }
-    public boolean isBroken() { return broken; }
+
+    public boolean isBroken() {
+        return broken;
+    }
+
     @Override
     public Collection<Constraint> getConstraints() {
-        if(!broken) {
+        if (!broken) {
             return super.getConstraints();
         } else {
             return Collections.unmodifiableCollection(brokenConstraints);
         }
     }
+
     @Override
     public Collection<Particle> getParticles() {
-        if(!broken) {
+        if (!broken) {
             return super.getParticles();
         } else {
             HashSet<Particle> p = new HashSet<>(super.getParticles());
@@ -148,18 +158,20 @@ public class Person extends BodyAdapter {
             return p;
         }
     }
+
     public Particle getRightHand() {
         return rightHand;
     }
+
     @Override
     public void paint(GraphicsContext graphicsContext) {
         super.paint(graphicsContext);
         graphicsContext.setColor(java.awt.Color.GREEN);
         graphicsContext.setLineThickness(2.0);
-        for(Constraint c : getConstraints()) {
-            if(c instanceof DistanceConstraint) {
+        for (Constraint c : getConstraints()) {
+            if (c instanceof DistanceConstraint) {
                 DistanceConstraint dc = (DistanceConstraint)c;
-                if(dc == headConstraint) {
+                if (dc == headConstraint) {
                     graphicsContext.fillOval(head.getX() - 0.1, head.getY() - 0.1, 0.2, 0.2);
                 } else {
                     graphicsContext.drawLine(dc.getP1().getX(), dc.getP1().getY(), dc.getP2().getX(), dc.getP2().getY());

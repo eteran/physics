@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class Grapple extends BodyAdapter implements SimulationListener {
+
     Particle location;
     double angle;
     double velocity;
@@ -32,11 +33,14 @@ public class Grapple extends BodyAdapter implements SimulationListener {
         grappled = false;
     }
 
-    public Simulator getSimulator() { return simulator; }
+    public Simulator getSimulator() {
+        return simulator;
+    }
 
     public void detatchRope() {
-        if(rope == null) {
+        if (rope == null) {
             return; /* there's no rope to detatch! */
+
         }
         rope.setColor(java.awt.Color.MAGENTA);
         /* check to see if the rope can be garbage collected every 3 seconds */
@@ -64,17 +68,17 @@ public class Grapple extends BodyAdapter implements SimulationListener {
         double x = location.getX() + chainLinkLength * Math.cos(ang);
         double y = location.getY() + chainLinkLength * Math.sin(ang);
         double xold = x - velocity * simulator.getTimeStep() * Math.cos(ang)
-            - (location.getX() - location.getPreviousX());
+                - (location.getX() - location.getPreviousX());
         double yold = y - velocity * simulator.getTimeStep() * Math.sin(ang)
-            - (location.getY() - location.getPreviousY());
+                - (location.getY() - location.getPreviousY());
         BasicParticle p1 = new BasicParticle(x, y, xold, yold, 0.0, 0.0);
 
         x = location.getX();
         y = location.getY();
         xold = x - velocity * simulator.getTimeStep() * Math.cos(ang)
-            - (location.getX() - location.getPreviousX());
+                - (location.getX() - location.getPreviousX());
         yold = y - velocity * simulator.getTimeStep() * Math.sin(ang)
-            - (location.getY() - location.getPreviousY());
+                - (location.getY() - location.getPreviousY());
         BasicParticle p2 = new BasicParticle(x, y, xold, yold, 0.0, 0.0);
 
         lastAddTime = simulator.currentTime();
@@ -84,7 +88,7 @@ public class Grapple extends BodyAdapter implements SimulationListener {
     }
 
     public void attachGrapple() {
-        if(rope != null) {
+        if (rope != null) {
             grappled = true;
             getGrapple().setFixed(true);
         }
@@ -99,7 +103,7 @@ public class Grapple extends BodyAdapter implements SimulationListener {
     }
 
     public Particle getGrapple() {
-        if(rope == null) {
+        if (rope == null) {
             return null;
         } else {
             return rope.getLinks().getLast();
@@ -116,7 +120,7 @@ public class Grapple extends BodyAdapter implements SimulationListener {
     @Override
     public Collection<Constraint> getConstraints() {
         HashSet<Constraint> constraints = new HashSet<>(super.getConstraints());
-        if(grappled) {
+        if (grappled) {
             DistanceConstraint dc = new DistanceConstraint(location, rope.getLinks().getFirst(), 0.0);
             constraints.add(dc);
         }
@@ -125,20 +129,20 @@ public class Grapple extends BodyAdapter implements SimulationListener {
 
     @Override
     public void handleIteration(double newTime) {
-        if(rope == null || grappled) {
+        if (rope == null || grappled) {
             return;
         }
-        if((double)(chainLinks + 1) * chainLinkLength <= maxChainLength) {
-            while(newTime - lastAddTime >= chainLinkLength / velocity) {
+        if ((double)(chainLinks + 1) * chainLinkLength <= maxChainLength) {
+            while (newTime - lastAddTime >= chainLinkLength / velocity) {
                 /* add a new chain link */
                 chainLinks++;
                 double ang = Math.toRadians(angle);
                 double x = location.getX();
                 double y = location.getY();
                 double xold = x - velocity * simulator.getTimeStep() * Math.cos(ang)
-                    - (location.getX() - location.getPreviousX());
+                        - (location.getX() - location.getPreviousX());
                 double yold = y - velocity * simulator.getTimeStep() * Math.sin(ang)
-                    - (location.getY() - location.getPreviousY());
+                        - (location.getY() - location.getPreviousY());
                 rope.addLink(new BasicParticle(x, y, xold, yold, 0.0, 0.0), chainLinkLength);
                 lastAddTime += chainLinkLength / velocity;
             }
@@ -153,9 +157,9 @@ public class Grapple extends BodyAdapter implements SimulationListener {
         graphicsContext.setLineThickness(0.5);
         double length = Math.max(graphicsContext.getWidth(), graphicsContext.getHeight());
         graphicsContext.drawLine(getLocation().getX(),
-                                 getLocation().getY(),
-                                 getLocation().getX() + length * Math.cos(Math.toRadians(angle)),
-                                 getLocation().getY() + length * Math.sin(Math.toRadians(angle)));
+                getLocation().getY(),
+                getLocation().getX() + length * Math.cos(Math.toRadians(angle)),
+                getLocation().getY() + length * Math.sin(Math.toRadians(angle)));
         super.paint(graphicsContext);
         graphicsContext.setColor(java.awt.Color.BLACK);
         graphicsContext.drawString(Integer.toString((int)location.getX()) + "m", graphicsContext.getXOffset() + 2.0, graphicsContext.getYOffset() + graphicsContext.getHeight() - 5.0);

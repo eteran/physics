@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 
 public class CursesGraphics implements GraphicsContext {
+
     double pixelsPerMeter;
     int width, height;
     double nextXOffset, nextYOffset;
@@ -26,13 +27,13 @@ public class CursesGraphics implements GraphicsContext {
 
     @Override
     public void ensureFocus(double x, double y) {
-        synchronized(focusMutex) {
+        synchronized (focusMutex) {
             nextXOffset = x - getWidth() / 2.0;
-            if(nextXOffset < 0.0) {
+            if (nextXOffset < 0.0) {
                 nextXOffset = 0.0;
             }
             nextYOffset = y - getHeight() / 2.0;
-            if(nextYOffset < 0.0) {
+            if (nextYOffset < 0.0) {
                 nextYOffset = 0.0;
             }
         }
@@ -60,13 +61,24 @@ public class CursesGraphics implements GraphicsContext {
     }
 
     @Override
-    public double getXOffset() { return xOffset; }
+    public double getXOffset() {
+        return xOffset;
+    }
+
     @Override
-    public double getYOffset() { return yOffset; }
+    public double getYOffset() {
+        return yOffset;
+    }
+
     @Override
-    public double getWidth() { return (double)width / pixelsPerMeter; }
+    public double getWidth() {
+        return (double)width / pixelsPerMeter;
+    }
+
     @Override
-    public double getHeight() { return (double)height / pixelsPerMeter; }
+    public double getHeight() {
+        return (double)height / pixelsPerMeter;
+    }
 
     @Override
     public void drawArc(double originX, double originY, double radius, double startAngle, double endAngle) {
@@ -89,10 +101,10 @@ public class CursesGraphics implements GraphicsContext {
         int x2 = (int)((lx2 - xOffset) * pixelsPerMeter + 0.5);
         int y2 = jCurses.getHeight() - (int)((ly2 - yOffset) * pixelsPerMeter + 0.5);
 
-        int Dx = x2 - x1; 
+        int Dx = x2 - x1;
         int Dy = y2 - y1;
         boolean steep = (Math.abs(Dy) >= Math.abs(Dx));
-        if(steep) {
+        if (steep) {
             int tmp = x1;
             x1 = y1;
             y1 = tmp;
@@ -110,43 +122,42 @@ public class CursesGraphics implements GraphicsContext {
         }
         int ystep = 1;
         if (Dy < 0) {
-            ystep = -1;		
-            Dy = -Dy; 
+            ystep = -1;
+            Dy = -Dy;
         }
-        int TwoDy = 2*Dy; 
-        int TwoDyTwoDx = TwoDy - 2*Dx; // 2*Dy - 2*Dx
+        int TwoDy = 2 * Dy;
+        int TwoDyTwoDx = TwoDy - 2 * Dx; // 2*Dy - 2*Dx
         int E = TwoDy - Dx; //2*Dy - Dx
         int y = y1;
         int xDraw, yDraw;
         int x;
         int lastX = 0, lastY = 0;
         String lineChar = "X";
-        for(x = x1; x != x2; x += xstep) {		
-            if (steep) {			
+        for (x = x1; x != x2; x += xstep) {
+            if (steep) {
                 xDraw = y;
                 yDraw = x;
-            } else {			
+            } else {
                 xDraw = x;
                 yDraw = y;
             }
             // plot
             //            if(xDraw >= 0 && xDraw < jCurses.getWidth() && yDraw >= 0 && yDraw < jCurses.getHeight())
             //    jCurses.drawString("X", xDraw, yDraw);
-            if(x != x1) {
-                if(yDraw == lastY && ystep < 0) {
+            if (x != x1) {
+                if (yDraw == lastY && ystep < 0) {
                     lineChar = "_";
-                } else if(yDraw == lastY) {
+                } else if (yDraw == lastY) {
                     lineChar = "-";
-                } else if(xDraw == lastX) {
+                } else if (xDraw == lastX) {
                     lineChar = "|";
-                } else if((xDraw > lastX && yDraw > lastY)
-                        ||
-                        (xDraw < lastX && yDraw < lastY)) {
+                } else if ((xDraw > lastX && yDraw > lastY)
+                        || (xDraw < lastX && yDraw < lastY)) {
                     lineChar = "\\";
                 } else {
                     lineChar = "/";
                 }
-                if(lastX >= 0 && lastX < jCurses.getWidth() && lastY >= 0 && lastY < jCurses.getHeight()) {
+                if (lastX >= 0 && lastX < jCurses.getWidth() && lastY >= 0 && lastY < jCurses.getHeight()) {
                     jCurses.drawString(lineChar, lastX, lastY);
                 }
             }
@@ -160,15 +171,15 @@ public class CursesGraphics implements GraphicsContext {
                 E += TwoDy; //E += 2*Dy;
             }
         }
-        if(lastX >= 0 && lastX < jCurses.getWidth() && lastY >= 0 && lastY < jCurses.getHeight()) {
+        if (lastX >= 0 && lastX < jCurses.getWidth() && lastY >= 0 && lastY < jCurses.getHeight()) {
             jCurses.drawString(lineChar, lastX, lastY);
         }
     }
 
     @Override
     public void drawBezier(Point2D... knots) {
-        for(int i=0; i<knots.length - 1; i++) {
-            drawLine(knots[i].getX(), knots[i].getY(), knots[i+1].getX(), knots[i+1].getY());
+        for (int i = 0; i < knots.length - 1; i++) {
+            drawLine(knots[i].getX(), knots[i].getY(), knots[i + 1].getX(), knots[i + 1].getY());
         }
     }
 
@@ -186,13 +197,13 @@ public class CursesGraphics implements GraphicsContext {
         jCurses.setColor(c);
     }
 
-	@Override
-	public double getWidth(String text) {
-		return text.length();
-	}
+    @Override
+    public double getWidth(String text) {
+        return text.length();
+    }
 
-	@Override
-	public double getFontHeight() {
-		return 1;
-	}
+    @Override
+    public double getFontHeight() {
+        return 1;
+    }
 }

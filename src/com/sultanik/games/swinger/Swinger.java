@@ -22,7 +22,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Swinger {
+
     private static class BuildingCluster {
+
         Building leftSceneBuilding;
         Building first, last;
         double xOffset, width;
@@ -41,21 +43,21 @@ public class Swinger {
         public void add(double x, double height, double width) {
             last = new Building(last, x, height, width);
             ordered.add(last);
-            if(first == null) {
+            if (first == null) {
                 first = last;
             }
-            if(x < minX) {
+            if (x < minX) {
                 minX = x;
             }
-            if(x > maxX) {
+            if (x > maxX) {
                 maxX = x;
             }
         }
 
-		public boolean isIntersecting(double x, double y) {
+        public boolean isIntersecting(double x, double y) {
             Building b = getClosestTo(x);
-            while(b != null && b.x <= x && b.x + b.width >= x) {
-                if(b.height >= y) {
+            while (b != null && b.x <= x && b.x + b.width >= x) {
+                if (b.height >= y) {
                     return true;
                 }
                 b = b.right;
@@ -64,49 +66,48 @@ public class Swinger {
         }
 
         public Building getClosestTo(double x) {
-            if(ordered.isEmpty()) {
+            if (ordered.isEmpty()) {
                 return null;
             }
-            if(x <= minX) {
+            if (x <= minX) {
                 return first;
             }
-            if(x >= maxX) {
+            if (x >= maxX) {
                 return last;
             }
-            int test = (int)((x - minX) / (maxX - minX) * (double)(ordered.size()-1) + 0.5);
-            return getClosestTo(x, 0, test, ordered.size()-1);
+            int test = (int)((x - minX) / (maxX - minX) * (double)(ordered.size() - 1) + 0.5);
+            return getClosestTo(x, 0, test, ordered.size() - 1);
         }
 
         /**
-         * Returns the leftmost building whose x-value is less than
-         * or equal to x.  If none exists, then it returns the
-         * rightmost building whose x-value is greater than or equal to
-         * x.
+         * Returns the leftmost building whose x-value is less than or equal to
+         * x. If none exists, then it returns the rightmost building whose
+         * x-value is greater than or equal to x.
          */
         Building getClosestTo(double x, int start, int test, int end) {
-            if(start == end) {
+            if (start == end) {
                 return ordered.get(start);
             }
             double tx = ordered.get(test).x;
-            if(tx == x) {
+            if (tx == x) {
                 Building b = ordered.get(test);
-                while(b.left != null && b.left.x == x) {
+                while (b.left != null && b.left.x == x) {
                     b = b.left;
                 }
                 return b;
             }
-            if(tx > x) {
-                if(test == start) {
+            if (tx > x) {
+                if (test == start) {
                     return ordered.get(test);
                 } else {
                     return getClosestTo(x, start, (start + test) / 2, test);
                 }
             } else {
-                if(test >= end - 1) {
+                if (test >= end - 1) {
                     return ordered.get(test);
                 } else {
                     return getClosestTo(x, test, (test + end) / 2, end);
-                } 
+                }
             }
         }
 
@@ -114,37 +115,43 @@ public class Swinger {
             xOffset = gc.getXOffset();
             width = gc.getWidth();
 
-            if(first == null) {
+            if (first == null) {
                 return;
             }
-            if(leftSceneBuilding == null) {
+
+            if (leftSceneBuilding == null) {
                 leftSceneBuilding = first;
             }
-            while(leftSceneBuilding.right != null && leftSceneBuilding.right.x + leftSceneBuilding.right.width <= xOffset + width) {
+
+            while (leftSceneBuilding.right != null && leftSceneBuilding.right.x + leftSceneBuilding.right.width <= xOffset + width) {
                 leftSceneBuilding = leftSceneBuilding.right;
             }
-            if(leftSceneBuilding.x < xOffset) {
+
+            if (leftSceneBuilding.x < xOffset) {
                 return; /* there are no buildings in the current scene */
+
             }
-            while(leftSceneBuilding.left != null && leftSceneBuilding.left.x >= xOffset) {
+
+            while (leftSceneBuilding.left != null && leftSceneBuilding.left.x >= xOffset) {
                 leftSceneBuilding = leftSceneBuilding.left;
             }
 
             Building b = leftSceneBuilding;
-            while(b != null && b.x + b.width <= xOffset + width) {
+            while (b != null && b.x + b.width <= xOffset + width) {
                 b.paint(gc);
                 b = b.right;
             }
         }
     }
-    
+
     private static class Building {
+
         double height;
         Building left, right;
         double x, width;
 
         @SuppressWarnings("unused")
-		 Building(double x, double height, double width) {
+        Building(double x, double height, double width) {
             this(null, x, height, width);
         }
 
@@ -152,7 +159,7 @@ public class Swinger {
             this.x = x;
             this.height = height;
             this.width = width;
-            if(left != null) {
+            if (left != null) {
                 left.right = this;
             }
             this.left = left;
@@ -160,9 +167,14 @@ public class Swinger {
         }
 
         @SuppressWarnings("unused")
-		public Building getLeft() { return left; }
+        public Building getLeft() {
+            return left;
+        }
+
         @SuppressWarnings("unused")
-		public Building getRight() { return right; }
+        public Building getRight() {
+            return right;
+        }
 
         public void paint(GraphicsContext gc) {
             gc.setLineThickness(4.0);
@@ -175,10 +187,13 @@ public class Swinger {
     }
 
     private static class Focuser implements FocusProvider {
+
         Particle p;
-		Focuser(Particle p) {
+
+        Focuser(Particle p) {
             this.p = p;
         }
+
         @Override
         public java.awt.geom.Point2D getFocalPoint() {
             return new java.awt.geom.Point2D.Double(p.getX(), p.getY());
@@ -186,34 +201,34 @@ public class Swinger {
     }
 
     public static class Debugger {
-    	boolean debugMode = false;
+
+        boolean debugMode = false;
     }
-    
+
     public static class KeyHandler extends KeyAdapter {
+
         Grapple grapple;
         Debugger debugger;
 
-        public KeyHandler(Grapple grapple, Debugger debugger) { 
-        	this.grapple = grapple;
-        	this.debugger = debugger;
+        public KeyHandler(Grapple grapple, Debugger debugger) {
+            this.grapple = grapple;
+            this.debugger = debugger;
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            synchronized(grapple.getSimulator().getSimulationMutex()) {
-                if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+            synchronized (grapple.getSimulator().getSimulationMutex()) {
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                     grapple.grapple();
-                } else if(e.getKeyChar() == 'a' || e.getKeyChar() == 'A') {
-                    if(grapple.isAttached()) {
+                } else if (e.getKeyChar() == 'a' || e.getKeyChar() == 'A') {
+                    if (grapple.isAttached()) {
                         grapple.detatchRope();
                     }
-                } else if(e.getKeyCode() == KeyEvent.VK_UP
-                          ||
-                          e.getKeyCode() == KeyEvent.VK_LEFT) {
+                } else if (e.getKeyCode() == KeyEvent.VK_UP
+                        || e.getKeyCode() == KeyEvent.VK_LEFT) {
                     grapple.setAngle(grapple.getAngle() + 3.0);
-                } else if(e.getKeyCode() == KeyEvent.VK_DOWN
-                          ||
-                          e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN
+                        || e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     grapple.setAngle(grapple.getAngle() - 3.0);
                 } else if (e.getKeyChar() == 'd') {
                     debugger.debugMode = !debugger.debugMode;
@@ -223,49 +238,58 @@ public class Swinger {
     }
 
     private static class Repainter implements RepaintListener {
+
         Simulator sim;
         Grapple grapple;
         Person person;
         BuildingCluster bc;
         Debugger debugger;
-        Repainter(Simulator sim, Grapple grapple, Person person, BuildingCluster bc, Debugger debugger) {this.sim = sim;this.grapple = grapple; this.bc = bc; this.person = person; this.debugger = debugger;}
+
+        Repainter(Simulator sim, Grapple grapple, Person person, BuildingCluster bc, Debugger debugger) {
+            this.sim = sim;
+            this.grapple = grapple;
+            this.bc = bc;
+            this.person = person;
+            this.debugger = debugger;
+        }
+
         @Override
         public void paint(GraphicsContext sg) {
-            synchronized(sim.getSimulationMutex()) {
+            synchronized (sim.getSimulationMutex()) {
                 /* draw the buildings first */
                 bc.paint(sg);
 
-                if(grapple.getGrapple() != null) {
-                    if(bc.isIntersecting(grapple.getGrapple().getX(), grapple.getGrapple().getY())) {
+                if (grapple.getGrapple() != null) {
+                    if (bc.isIntersecting(grapple.getGrapple().getX(), grapple.getGrapple().getY())) {
                         grapple.attachGrapple();
                     }
                 }
 
-                if(person.isBroken()) {
+                if (person.isBroken()) {
                     grapple.detatchRope();
                 }
 
                 /* draw the grapple second */
                 grapple.paint(sg);
-                if(debugger.debugMode) {
-                    for(Constraint c : sim.getConstraints()) {
+                if (debugger.debugMode) {
+                    for (Constraint c : sim.getConstraints()) {
                         c.paint(sg);
                     }
                 }
-                for(Body b : sim.getBodies()) {
-                    if(b != grapple) {
+                for (Body b : sim.getBodies()) {
+                    if (b != grapple) {
                         b.paint(sg);
                     }
                 }
-                for(Particle p : sim.getParticles()) {
+                for (Particle p : sim.getParticles()) {
                     p.paint(sg);
                 }
-                if(debugger.debugMode) {
-                	for(Force f : sim.getForces()) {
-                            f.paint(sim, sg);
-                        }
-                	sg.setColor(Color.BLACK);
-                	sg.drawString("DEBUG", sg.getXOffset() + sg.getWidth() - sg.getWidth("DEBUG")/3.0, sg.getYOffset() + sg.getHeight() - 5);
+                if (debugger.debugMode) {
+                    for (Force f : sim.getForces()) {
+                        f.paint(sim, sg);
+                    }
+                    sg.setColor(Color.BLACK);
+                    sg.drawString("DEBUG", sg.getXOffset() + sg.getWidth() - sg.getWidth("DEBUG") / 3.0, sg.getYOffset() + sg.getHeight() - 5);
                 }
             }
         }
@@ -283,7 +307,7 @@ public class Swinger {
             uniformRand1 = 2.0 * Math.random() - 1.0;
             uniformRand2 = 2.0 * Math.random() - 1.0;
             w = uniformRand1 * uniformRand1 + uniformRand2 * uniformRand2;
-        } while(w >= 1.0);
+        } while (w >= 1.0);
         w = Math.sqrt((-2.0 * Math.log(w)) / w);
         return mean + var * uniformRand1 * w;
         //return mean + var * sqrt2 * inverf(2.0 * uniformRand - 1.0);
@@ -297,10 +321,10 @@ public class Swinger {
         double heightVariance = 50.0;
 
         BuildingCluster bc = new BuildingCluster();
-        for(int i=0; i<numBuildings; i++) {
+        for (int i = 0; i < numBuildings; i++) {
             bc.add(20.0 + (double)i * (5.0 + buildingInterval),
-                   generateNormal(averageHeight, heightVariance),
-                   5.0);
+                    generateNormal(averageHeight, heightVariance),
+                    5.0);
         }
 
         double resolution = 0.02;
@@ -315,40 +339,40 @@ public class Swinger {
         sim.addForce(new Gravity());
         sim.addForce(new GroundFriction());
 
-        BasicParticle bp = new BasicParticle(1.9,150.0,1.8999,150.0,0.0,0.0);
+        BasicParticle bp = new BasicParticle(1.9, 150.0, 1.8999, 150.0, 0.0, 0.0);
         //bp.setFixed(true);
         Grapple grapple = new Grapple(sim,
-                                      bp,
-                                      20.0,
-                                      30.0,
-                                      3.0,
-                                      65.0);
+                bp,
+                20.0,
+                30.0,
+                3.0,
+                65.0);
 
         sim.addBody(grapple);
         Person p = new Person(grapple.getLocation());
         sim.addBody(p);
 
         Debugger debugger = new Debugger();
-        
+
         ui.addRepaintListener(new Repainter(sim, grapple, p, bc, debugger));
 
         sim.addConstraint(new DistanceConstraint(p.getRightHand(), grapple.getLocation(), 0.0));
-        
+
         ui.addKeyListener(new KeyHandler(grapple, debugger));
 
         ui.setFocusProvider(new Focuser(grapple.getLocation()));
 
         boolean done = false;
 
-        while(!done) {
+        while (!done) {
             lastTime = System.currentTimeMillis();
             sim.simulate();
             ui.repaint();
             int sleepTime = (int)(resolution * 1000.0 - (System.currentTimeMillis() - lastTime) + 0.5);
-            if(sleepTime > 0) {
+            if (sleepTime > 0) {
                 try {
                     Thread.sleep(sleepTime);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

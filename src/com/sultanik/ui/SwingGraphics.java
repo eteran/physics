@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 
 public class SwingGraphics implements GraphicsContext {
+
     Graphics2D graphics;
     double pixelsPerMeter;
     int width, height;
@@ -28,13 +29,13 @@ public class SwingGraphics implements GraphicsContext {
 
     @Override
     public void ensureFocus(double x, double y) {
-        synchronized(focusMutex) {
+        synchronized (focusMutex) {
             nextXOffset = x - getWidth() / 2.0;
-            if(nextXOffset < 0.0) {
+            if (nextXOffset < 0.0) {
                 nextXOffset = 0.0;
             }
             nextYOffset = y - getHeight() / 2.0;
-            if(nextYOffset < 0.0) {
+            if (nextYOffset < 0.0) {
                 nextYOffset = 0.0;
             }
         }
@@ -67,13 +68,24 @@ public class SwingGraphics implements GraphicsContext {
     }
 
     @Override
-    public double getXOffset() { return xOffset; }
+    public double getXOffset() {
+        return xOffset;
+    }
+
     @Override
-    public double getYOffset() { return yOffset; }
+    public double getYOffset() {
+        return yOffset;
+    }
+
     @Override
-    public double getWidth() { return (double)width / pixelsPerMeter; }
+    public double getWidth() {
+        return (double)width / pixelsPerMeter;
+    }
+
     @Override
-    public double getHeight() { return (double)height / pixelsPerMeter; }
+    public double getHeight() {
+        return (double)height / pixelsPerMeter;
+    }
 
     @Override
     public void drawArc(double originX, double originY, double radius, double startAngle, double endAngle) {
@@ -92,21 +104,21 @@ public class SwingGraphics implements GraphicsContext {
     @Override
     public void setLineThickness(double pixels) {
         lineThickness = pixels;
-	graphics.setStroke(new BasicStroke((float)pixels));
+        graphics.setStroke(new BasicStroke((float)pixels));
     }
 
     @Override
     public void drawLine(double x1, double y1, double x2, double y2) {
         graphics.drawLine((int)((x1 - xOffset) * pixelsPerMeter + 0.5),
-                          height - (int)((y1 - yOffset) * pixelsPerMeter + 0.5),
-                          (int)((x2 - xOffset) * pixelsPerMeter + 0.5),
-                          height - (int)((y2 - yOffset) * pixelsPerMeter + 0.5));
+                height - (int)((y1 - yOffset) * pixelsPerMeter + 0.5),
+                (int)((x2 - xOffset) * pixelsPerMeter + 0.5),
+                height - (int)((y2 - yOffset) * pixelsPerMeter + 0.5));
     }
 
     @Override
     public void drawBezier(Point2D... knots) {
         Point2D k[] = new Point2D[knots.length];
-        for(int i=0; i<knots.length; i++) {
+        for (int i = 0; i < knots.length; i++) {
             k[i] = new Point2D.Double((knots[i].getX() - xOffset) * pixelsPerMeter,
                     (double)height - (knots[i].getY() - yOffset) * pixelsPerMeter);
         }
@@ -116,16 +128,16 @@ public class SwingGraphics implements GraphicsContext {
     @Override
     public void fillOval(double x, double y, double w, double h) {
         graphics.fillOval((int)((x - xOffset) * pixelsPerMeter + 0.5),
-                          height - (int)((y - yOffset) * pixelsPerMeter + 0.5),
-                          (int)(w * pixelsPerMeter + 0.5),
-                          (int)(h * pixelsPerMeter + 0.5));
+                height - (int)((y - yOffset) * pixelsPerMeter + 0.5),
+                (int)(w * pixelsPerMeter + 0.5),
+                (int)(h * pixelsPerMeter + 0.5));
     }
 
     @Override
     public void drawString(String text, double x, double y) {
         graphics.drawString(text,
-                            (int)((x - xOffset) * pixelsPerMeter + 0.5),
-                            height - (int)((y - yOffset) * pixelsPerMeter + 0.5));
+                (int)((x - xOffset) * pixelsPerMeter + 0.5),
+                height - (int)((y - yOffset) * pixelsPerMeter + 0.5));
     }
 
     @Override
@@ -133,13 +145,13 @@ public class SwingGraphics implements GraphicsContext {
         graphics.setColor(c);
     }
 
-	@Override
-	public double getWidth(String text) {
-		return graphics.getFontMetrics().stringWidth(text);
-	}
+    @Override
+    public double getWidth(String text) {
+        return graphics.getFontMetrics().stringWidth(text);
+    }
 
-	@Override
-	public double getFontHeight() {
-		return graphics.getFontMetrics().getHeight();
-	}
+    @Override
+    public double getFontHeight() {
+        return graphics.getFontMetrics().getHeight();
+    }
 }

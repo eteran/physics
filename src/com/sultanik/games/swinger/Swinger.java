@@ -369,7 +369,7 @@ public class Swinger {
             if (sleepTime > 0) {
                 try {
                     Thread.sleep(sleepTime);
-                } catch (Exception e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }

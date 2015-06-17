@@ -583,7 +583,7 @@ public final class JCurses implements UserInterface {
             jc.refresh();
             try {
                 Thread.sleep(500);
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
